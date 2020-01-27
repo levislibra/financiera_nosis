@@ -1,0 +1,19 @@
+<openerp>
+  <data>
+
+    <!-- Vista Form Entidad -->
+
+    <record id="company_form_inherited"  model="ir.ui.view">
+      <field name="name">Nosis Extension Company form</field>
+      <field name="model">res.company</field>
+      <field name="inherit_id" ref="financiera_prestamos.company_form_inherited"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='id_prestamo_venta']" position='after'>
+          <separator string="Modulo Nosis" colspan="2"/>
+          <field name="nosis_configuracion_id"/>
+        </xpath>
+      </field>
+    </record>
+
+  </data>
+</openerp>

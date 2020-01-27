@@ -1,0 +1,73 @@
+<openerp>
+  <data>
+
+    <!-- Financiera ROL configuracion -->
+
+    <record model="ir.ui.view" id="financiera_nosis_conf_tree">
+      <field name="name">financiera.nosis.configuracion.tree</field>
+      <field name="model">financiera.nosis.configuracion</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false">
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="financiera_nosis_conf_form" model="ir.ui.view">
+        <field name="name">financiera.nosis.configuracion.form</field>
+        <field name="model">financiera.nosis.configuracion</field>
+        <field name="arch" type="xml">
+            <form string="Configuracion" create="false" delete="false">
+                <header>
+                  <button name="actualizar_saldo_informes" string="Actualizar saldo informes" type="object" />
+                </header>
+                <sheet>
+                  <group>
+                      <group>
+                        <field name="company_id" groups="base.group_erp_manager"/>
+                        <field name="name"/>
+                      </group>
+                      <group>
+<!--                         <field name="asignar_capacidad_pago_mensual"/>
+                        <field name="dias_vovler_a_consultar"/>
+                        <field name="consultar_distinto_modelo"/> -->
+                      </group>
+                    </group>
+                    <group>
+                      <group string="Información conexión">
+                        <field name="usuario"/>
+                        <field name="password" password="True"/>
+                        <field name="saldo_informes" readonly="1"/>
+                      </group>
+                      <group>
+                      </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="financiera_nosis_action">
+      <field name="name">Configuracion</field>
+      <field name="res_model">financiera.nosis.configuracion</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="financiera_nosis_conf_tree"/>
+    </record>
+
+
+    <!-- Top menu item -->
+    
+    <menuitem name="Buro Nosis" id="menu_nosis" web_icon="financiera_nosis,static/description/icon.png" />
+    <!-- groups="financiera_buro_rol_base.manager" -->
+    
+    <!-- menu categories -->
+    
+    <menuitem name="Configuracion" id="menu_config" sequence="0" parent="menu_nosis"/>
+
+    <menuitem name="Configuracion" id="menu_config_action" sequence="1" parent="menu_config" action="financiera_nosis_action"/>
+
+
+
+
+  </data>
+</openerp>
