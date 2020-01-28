@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+	<record model="ir.module.category" id="financiera_nosis_management">
+	  <field name="name">Financiera Nosis</field>
+	  <field name="description">Nivel de acceso</field>
+	  <field name="sequence">7</field>
+	</record>
+
+	<record id="user" model="res.groups">
+     <field name="name">Usuario</field>
+     <field name="category_id" ref="financiera_nosis_management"/>
+    </record>
+
+    <record id="manager" model="res.groups">
+     <field name="name">Administrador</field>
+     <field name="category_id" ref="financiera_nosis_management"/>
+     <field name="implied_ids" eval="[(4, ref('user'))]"/>
+    </record>
+
+<!--     <record id="financiera_prestamos.user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('user'))]"/>
+    </record>
+
+    <record id="base.group_portal" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('user'))]"/>
+    </record>
+ -->
+    
+</data>
+</openerp>

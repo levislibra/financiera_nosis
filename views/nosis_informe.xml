@@ -1,0 +1,85 @@
+<openerp>
+  <data>
+
+    <!-- Vista Form Partner Page Buro ROL -->
+
+    <record id="partner_nosis_form_inherited"  model="ir.ui.view">
+      <field name="name">Extension Partner Nosis form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//page[3]" position='after'>
+          <page string='Nosis' groups="financiera_nosis.manager">
+            <button name="consultar_informe" string="Consultar informe" class="oe_highlight oe_read_only" type="object" confirm="Desea consultar el ultimo informe?"/>
+            <notebook>
+              <page string="Informes">
+                <field name="nosis_informe_ids">
+                  <tree>
+                    <field name="create_date" string="Fecha"/>
+                    <field name="nosis_vi_identificacion"/>
+                    <field name="nosis_vi_razonSocial"/>
+                    <field name="nosis_sco_12m"/>
+                    <field name="nosis_cda"/>
+                    <field name="nosis_ci_vig_peorSit"/>
+                    <field name="nosis_ci_vig_total_cantBcos"/>
+                    <field name="nosis_ci_vig_total_monto"/>
+                    <field name="nosis_ci_vig_sit1_monto"/>
+                    <field name="nosis_ci_vig_sit2_monto"/>
+                    <field name="nosis_ci_vig_sit3_monto"/>
+                    <field name="nosis_ci_vig_sit4_monto"/>
+                    <field name="nosis_ci_vig_sit5_monto"/>
+                    <field name="nosis_ci_vig_sit6_monto"/>
+                    <field name="nosis_ci_12m_sf_noPag_cant"/>
+                    <field name="nosis_ci_12m_sf_noPag_monto"/>
+                  </tree>
+                  <form>
+                    <group>
+                      <field name="create_date"/>
+                      <field name="nosis_vi_identificacion"/>
+                      <field name="nosis_vi_razonSocial"/>
+                      <field name="nosis_sco_12m"/>
+                      <field name="nosis_cda"/>
+                      <field name="nosis_ci_vig_peorSit"/>
+                      <field name="nosis_ci_vig_total_cantBcos"/>
+                    </group>
+                  </form>
+                </field>
+              </page>
+            </notebook>
+          </page>
+        </xpath>
+      </field>
+    </record>
+
+
+    <!-- Vista Form Partner Buro Nosis -->
+
+    <record id="partner_nosis_basic_form_inherited"  model="ir.ui.view">
+      <field name="name">Extension Partner Nosis form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
+      <field name="arch" type="xml">
+        <xpath expr="//sheet/notebook" position="before">
+          <group string="Resumen del informe Nosis" groups="financiera_nosis.manager">
+            <field name="nosis_vi_identificacion"/>
+            <field name="nosis_vi_razonSocial"/>
+            <field name="nosis_sco_12m"/>
+            <field name="nosis_cda"/>
+            <field name="nosis_ci_vig_peorSit"/>
+            <field name="nosis_ci_vig_total_cantBcos"/>
+            <field name="nosis_ci_vig_total_monto"/>
+            <field name="nosis_ci_vig_sit1_monto"/>
+            <field name="nosis_ci_vig_sit2_monto"/>
+            <field name="nosis_ci_vig_sit3_monto"/>
+            <field name="nosis_ci_vig_sit4_monto"/>
+            <field name="nosis_ci_vig_sit5_monto"/>
+            <field name="nosis_ci_vig_sit6_monto"/>
+            <field name="nosis_ci_12m_sf_noPag_cant"/>
+            <field name="nosis_ci_12m_sf_noPag_monto"/>
+          </group>
+        </xpath>
+      </field>
+    </record>
+
+  </data>
+</openerp>

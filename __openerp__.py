@@ -25,8 +25,10 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'security/user_groups.xml',
         'views/extends_res_company.xml',
         'views/nosis_configuracion.xml',
+        'views/nosis_informe.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
