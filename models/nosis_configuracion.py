@@ -7,13 +7,15 @@ from openerp.exceptions import UserError, ValidationError
 import time
 import requests
 
+ENDPOINT_NOSIS = 'https://ws01.nosis.com/rest/variables'
+
 class FinancieraNosisConfiguracion(models.Model):
 	_name = 'financiera.nosis.configuracion'
 
 	name = fields.Char('Nombre')
 	usuario = fields.Char('Usuario')
-	password = fields.Char('Password')
-	saldo_informes = fields.Integer('Saldo Informes')
+	token = fields.Char('Token')
+	# saldo_informes = fields.Integer('Saldo Informes')
 	
 	# asignar_capacidad_pago_mensual = fields.Boolean('Asignar capacidad de pago mensual automaticamente')
 	# dias_vovler_a_consultar = fields.Integer('Dias para volver a solicitar informe')
@@ -22,16 +24,18 @@ class FinancieraNosisConfiguracion(models.Model):
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.configuracion'))
 	
 	@api.one
-	def actualizar_saldo_informes(self):
-		s = requests.Session()
+	def test_conexion(self):
 		params = {
-			'action': 'login',
-			'username': self.usuario,
-			'password': self.password,
+			'usuario': self.usuario,
+			'token': self.token,
 		}
-		r = s.post('https://informe.riesgoonline.com/api/usuarios/sesion', params=params)
-		data = r.json()
-		self.saldo_informes = int(data['cliente_informes'])
+		response = requests.get(ENDPOINT_NOSIS, params)
+		print("RESULTADO", response)
+		print(response.status_code)
+		if response.status_code == 400:
+			raise UserError("La cuenta esta conectada.")
+		else:
+			raise UserError("Error de conexion.")
 
 	# @api.one
 	# def get_rol_modelo_segun_entidad(self, entidad_id):

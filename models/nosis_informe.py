@@ -8,6 +8,9 @@ from openerp.exceptions import UserError, ValidationError
 import time
 import requests
 
+ENDPOINT_NOSIS = 'https://ws01.nosis.com/rest/variables'
+VARIABLES_NOSIS = 'VI_Identificacion,VI_RazonSocial,CI_Vig_PeorSit,CI_Vig_Total_CantBcos,CI_Vig_Total_Monto,CI_Vig_Sit1_Monto,CI_Vig_Sit2_Monto,CI_Vig_Sit3_Monto,CI_Vig_Sit4_Monto,CI_Vig_Sit5_Monto,CI_Vig_Sit6_Monto,CI_Vig_Detalle_PorEntidad,HC_12m_SF_NoPag_Cant,HC_12m_SF_NoPag_Monto,SCO_12m,CDA'
+
 class ExtendsResPartnerRol(models.Model):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
@@ -34,6 +37,100 @@ class ExtendsResPartnerRol(models.Model):
 	nosis_ci_12m_sf_noPag_cant = fields.Char('Cantidad Cheques sin fondo no pagados')
 	nosis_ci_12m_sf_noPag_monto = fields.Char('Monto Cheques sin fondo no pagados')
 
+	@api.one
+	def solicitar_informe_nosis(self, cda=None):
+		nosis_configuracion_id = self.company_id.nosis_configuracion_id
+		params = {
+			'usuario': nosis_configuracion_id.usuario,
+			'token': nosis_configuracion_id.token,
+			'documento': self.main_id_number, 
+			'vr': VARIABLES_NOSIS,
+			'format': 'json',
+		}
+		# if cda == None:
+		# 	cda = nosis_configuracion_id.get_nosis_cda_segun_entidad(self.nosis_entidad_id)[0]
+		# if cda != None:
+		# 	params['cda'] = cda
+		
+		response = requests.get(ENDPOINT_NOSIS, params)
+		data = response.json()
+		if response.status_code != 200:
+			print("CODE != 200")
+			print("RESPONSE", response)
+			raise ValidationError("Error en la consulta de informe Nosis: "+data['Contenido']['Resultado']['Novedad'])
+		else:
+			fni_values = {}
+			for variable in data['Contenido']['Datos']['Variables']:
+				print("VARIABLE: ", variable)
+				if variable['Nombre'] == 'VI_Identificacion':
+					fni_values['nosis_vi_identificacion'] = variable['Valor']
+					self.nosis_vi_identificacion = variable['Valor']
+
+				if variable['Nombre'] == 'VI_RazonSocial':
+					fni_values['nosis_vi_razonSocial'] = variable['Valor']
+					self.nosis_vi_razonSocial = variable['Valor']
+
+				if variable['Nombre'] == 'SCO_12m':
+					fni_values['nosis_sco_12m'] = variable['Valor']
+					self.nosis_sco_12m = variable['Valor']
+
+				if variable['Nombre'] == 'CDA':
+					fni_values['nosis_cda'] = variable['Valor']
+					self.nosis_cda = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_PeorSit':
+					fni_values['nosis_ci_vig_peorSit'] = variable['Valor']
+					self.nosis_ci_vig_peorSit = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Total_CantBcos':
+					fni_values['nosis_ci_vig_total_cantBcos'] = variable['Valor']
+					self.nosis_ci_vig_total_cantBcos = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Total_Monto':
+					fni_values['nosis_ci_vig_total_monto'] = variable['Valor']
+					self.nosis_ci_vig_total_monto = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Sit1_Monto':
+					fni_values['nosis_ci_vig_sit1_monto'] = variable['Valor']
+					self.nosis_ci_vig_sit1_monto = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Sit2_Monto':
+					fni_values['nosis_ci_vig_sit2_monto'] = variable['Valor']
+					self.nosis_ci_vig_sit2_monto = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Sit3_Monto':
+					fni_values['nosis_ci_vig_sit3_monto'] = variable['Valor']
+					self.nosis_ci_vig_sit3_monto = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Sit4_Monto':
+					fni_values['nosis_ci_vig_sit4_monto'] = variable['Valor']
+					self.nosis_ci_vig_sit4_monto = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Sit5_Monto':
+					fni_values['nosis_ci_vig_sit5_monto'] = variable['Valor']
+					self.nosis_ci_vig_sit5_monto = variable['Valor']
+
+				if variable['Nombre'] == 'CI_Vig_Sit6_Monto':
+					fni_values['nosis_ci_vig_sit6_monto'] = variable['Valor']
+					self.nosis_ci_vig_sit6_monto = variable['Valor']
+
+				if variable['Nombre'] == 'HC_12m_SF_NoPag_Cant':
+					fni_values['nosis_ci_12m_sf_noPag_cant'] = variable['Valor']
+					self.nosis_ci_12m_sf_noPag_cant = variable['Valor']
+
+				if variable['Nombre'] == 'HC_12m_SF_NoPag_Monto':
+					fni_values['nosis_ci_12m_sf_noPag_monto'] = variable['Valor']
+					self.nosis_ci_12m_sf_noPag_monto = variable['Valor']
+
+			nuevo_informe_id = self.env['financiera.nosis.informe'].create(fni_values)
+			self.nosis_informe_ids = [nuevo_informe_id.id]
+
+	@api.one
+	def asignar_identidad_nosis(self):
+		if self.nosis_vi_identificacion != False:
+			self.main_id_number = self.nosis_vi_identificacion
+		if self.nosis_vi_razonSocial != False:
+			self.name = self.nosis_vi_razonSocial
 
 class FinancieraNosisInforme(models.Model):
 	_name = 'financiera.nosis.informe'
@@ -61,138 +158,6 @@ class FinancieraNosisInforme(models.Model):
 	nosis_ci_12m_sf_noPag_cant = fields.Integer('Cantidad Cheques sin fondo no pagados')
 	nosis_ci_12m_sf_noPag_monto = fields.Integer('Monto Cheques sin fondo no pagados')
 
-	# @api.one
-	# def consultar_informe(self):
-	# 	rol_configuracion_id = self.company_id.rol_configuracion_id
-	# 	params = {
-	# 		'username': rol_configuracion_id.usuario,
-	# 		'password': rol_configuracion_id.password,
-	# 		'formato': 'json',
-	# 		'version': 2,
-	# 	}
-	# 	url = 'https://informe.riesgoonline.com/api/informes/consultar/'
-	# 	url = url + self.main_id_number
-	# 	r = requests.get(url, params=params)
-	# 	data = r.json()
-	# 	self.procesar_respuesta_informe_rol(data)
-
-	# @api.one
-	# def solicitar_informe(self, modelo=None):
-	# 	rol_configuracion_id = self.company_id.rol_configuracion_id
-	# 	params = {
-	# 		'username': rol_configuracion_id.usuario,
-	# 		'password': rol_configuracion_id.password,
-	# 		'formato': 'json',
-	# 		'version': 2,
-	# 		'procesar_forzado': 1,
-	# 	}
-	# 	if modelo == None:
-	# 		modelo = rol_configuracion_id.get_rol_modelo_segun_entidad(self.rol_entidad_id)[0]
-	# 	if modelo != None:
-	# 		params['procesar_experto'] = modelo
-	# 	url = 'https://informe.riesgoonline.com/api/informes/solicitar/'
-	# 	url = url + self.main_id_number
-	# 	r = requests.get(url, params=params)
-	# 	data = r.json()
-	# 	self.procesar_respuesta_informe_rol(data)
-
-	# @api.one
-	# def procesar_respuesta_informe_rol(self, data):
-	# 	if 'error' in data.keys():
-	# 		raise ValidationError(data['mensaje'])
-	# 	else:
-	# 		codigo = data['informe']['id']
-	# 		informe_existe = False
-	# 		for informe_id in self.buro_rol_informe_ids:
-	# 			if str(codigo) == informe_id.rol_id:
-	# 				informe_existe = True
-	# 				break
-	# 		if not informe_existe:
-	# 			fecha = date.fromtimestamp(data['informe']['fecha_hora'])
-	# 			sexo = None
-	# 			if data['persona']['sexo'] == 'M':
-	# 				sexo = 'masculino'
-	# 			elif data['persona']['sexo'] == 'F':
-	# 				sexo = 'femenino'
-	# 			informe_values = {
-	# 				'partner_id': self.id,
-	# 				'name': data['persona']['nombre'],
-	# 				'rol_id': codigo,
-	# 				'cuit': self.main_id_number,
-	# 				'sexo': sexo,
-	# 				'clase': data['persona']['clase'],
-	# 				'fecha_nacimiento': data['persona']['fecha_nacimiento'],
-	# 				'perfil_letra': data['persona']['perfil']['letra'],
-	# 				'perfil_texto': data['persona']['perfil']['texto'],
-	# 				'fecha_informe': fecha,
-	# 			}
-	# 			nuevo_informe_id = self.env['financiera.buro.rol.informe'].create(informe_values)
-	# 			self.buro_rol_informe_ids = [nuevo_informe_id.id]
-	# 			for data_domicilio in data['persona']['domicilios']:
-	# 				domicilio_values = {
-	# 					'buro_rol_informe_id': nuevo_informe_id.id,
-	# 					'domicilio': data_domicilio['domicilio'],
-	# 					'tipo': data_domicilio['tipo'],
-	# 				}
-	# 				nuevo_domicilio_id = self.env['financiera.buro.rol.informe.domicilio'].create(domicilio_values)
-	# 				nuevo_informe_id.domicilio_ids = [nuevo_domicilio_id.id]
-	# 				self.rol_domicilio_ids = [nuevo_domicilio_id.id]
-	# 			for data_telefono in data['persona']['telefonos']:
-	# 				telefono_values = {
-	# 					'buro_rol_informe_id': nuevo_informe_id.id,
-	# 					'telefono': data_telefono['numero'],
-	# 					'anio_guia': data_telefono['anio_guia'],
-	# 					'titular': data_telefono['titular'],
-	# 				}
-	# 				nuevo_telefono_id = self.env['financiera.buro.rol.informe.telefono'].create(telefono_values)
-	# 				nuevo_informe_id.telefono_ids = [nuevo_telefono_id.id]
-	# 				self.rol_telefono_ids = [nuevo_telefono_id.id]
-	# 			for data_actividad in data['persona']['actividad']['actividades_afip']:
-	# 				actividad_values = {
-	# 					'buro_rol_informe_id': nuevo_informe_id.id,
-	# 					'codigo': data_actividad['codigo'],
-	# 					'actividad_comercial': data_actividad['descripcion'],
-	# 					'formulario': data_actividad['formulario'],
-	# 				}
-	# 				nuevo_actividad_id = self.env['financiera.buro.rol.informe.actividad'].create(actividad_values)
-	# 				nuevo_informe_id.actividad_ids = [nuevo_actividad_id.id]
-	# 				self.rol_actividad_ids = [nuevo_actividad_id.id]
-	# 		# Perfil principal y Experto ROL
-	# 		fecha = date.fromtimestamp(data['informe']['fecha_hora'])
-	# 		self.rol_fecha_informe = fecha
-	# 		self.rol_perfil_letra = data['persona']['perfil']['letra']
-	# 		self.rol_perfil_texto = data['persona']['perfil']['texto']
-			
-	# 		if 'experto' in data['persona'].keys():
-	# 			rol_experto = data['persona']['experto']
-	# 			self.rol_experto_nombre = rol_experto['nombre']
-	# 			self.rol_experto_codigo = rol_experto['codigo']
-	# 			self.rol_experto_tarjeta = rol_experto['tarjeta']
-	# 			self.rol_experto_puntos = rol_experto['puntos']
-	# 			rol_experto_detalles_texto = ""
-	# 			for detalles in rol_experto['detalles']:
-	# 				estado = detalles['estado']
-	# 				texto = detalles['texto']
-	# 				rol_experto_detalles_texto += ""+str(estado)+" - "+texto+"<br/>"
-	# 			# rol_experto_detalles_texto += ""
-	# 			self.rol_experto_detalles_texto = rol_experto_detalles_texto
-	# 			self.rol_experto_ingreso = rol_experto['ingreso']
-	# 			self.rol_experto_compromiso_mensual = rol_experto['compromiso_mensual']
-	# 			self.rol_experto_resultado = rol_experto['resultado']
-	# 			self.rol_experto_monto_mensual_evaluado = rol_experto['otorgar_prestamo_max']
-	# 			prestamo = str(rol_experto['prestamo']).replace('.', '').replace(',00', '')
-	# 			self.rol_capacidad_pago_mensual = float(prestamo)
-	# 			rol_configuracion_id = self.company_id.rol_configuracion_id
-	# 			if rol_configuracion_id.asignar_capacidad_pago_mensual:
-	# 				self.capacidad_pago_mensual = self.rol_capacidad_pago_mensual
-	# 			if self.rol_experto_resultado == 'S':
-	# 				pass
-	# 			elif self.rol_experto_resultado == 'I':
-	# 				pass
-	# 			elif self.rol_experto_resultado == 'N':
-	# 				pass
-	# 			elif self.rol_experto_resultado == 'V':
-	# 				pass
 
 
 # class ExtendsFinancieraPrestamo(models.Model):

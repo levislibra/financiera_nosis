@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <form string="Configuracion" create="false" delete="false">
                 <header>
-                  <button name="actualizar_saldo_informes" string="Actualizar saldo informes" type="object" />
+                  <button name="test_conexion" string="Probar conexión" type="object" />
                 </header>
                 <sheet>
                   <group>
@@ -36,8 +36,7 @@
                     <group>
                       <group string="Información conexión">
                         <field name="usuario"/>
-                        <field name="password" password="True"/>
-                        <field name="saldo_informes" readonly="1"/>
+                        <field name="token" password="True"/>
                       </group>
                       <group>
                       </group>
