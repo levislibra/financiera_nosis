@@ -1,6 +1,47 @@
 <openerp>
   <data>
 
+    <!-- Lista de informes solicitados -->
+    <record model="ir.ui.view" id="financiera_nosis_tree">
+      <field name="name">financiera.nosis.informe.tree</field>
+      <field name="model">financiera.nosis.informe</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false" edit="false">
+          <field name="create_date" string="Fecha"/>
+          <field name="partner_id"/>
+          <field name="nosis_vi_identificacion"/>
+          <field name="nosis_vi_razonSocial"/>
+          <field name="nosis_sco_12m"/>
+          <field name="nosis_cda"/>
+          <field name="nosis_cda_evaluado"/>
+          <field name="nosis_ci_vig_peorSit"/>
+          <field name="nosis_ci_vig_total_cantBcos"/>
+          <field name="nosis_ci_vig_total_monto"/>
+          <field name="nosis_ci_vig_sit1_monto"/>
+          <field name="nosis_ci_vig_sit2_monto"/>
+          <field name="nosis_ci_vig_sit3_monto"/>
+          <field name="nosis_ci_vig_sit4_monto"/>
+          <field name="nosis_ci_vig_sit5_monto"/>
+          <field name="nosis_ci_vig_sit6_monto"/>
+          <field name="nosis_ci_12m_sf_noPag_cant"/>
+          <field name="nosis_ci_12m_sf_noPag_monto"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="financiera_nosis_informe_action">
+      <field name="name">Lista de informes solicitados</field>
+      <field name="res_model">financiera.nosis.informe</field>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="financiera_nosis_tree"/>
+    </record>
+
+    <!-- menu categories -->
+    
+    <menuitem name="Informes" id="menu_informes" sequence="10" parent="menu_nosis"/>
+
+    <menuitem name="Informes" id="menu_informes_action" sequence="1" parent="menu_informes" action="financiera_nosis_informe_action"/>
+
     <!-- Vista Form Partner Page Buro Nosis -->
 
     <record id="partner_nosis_form_inherited"  model="ir.ui.view">
@@ -10,7 +51,6 @@
       <field name="arch" type="xml">
         <xpath expr="//page[3]" position='after'>
           <page string='Nosis' groups="financiera_nosis.manager">
-            <button name="solicitar_informe_nosis" string="Solicitar informe" class="oe_highlight oe_read_only" type="object" confirm="Desea solicitar el informe?"/>
             <notebook>
               <page string="Informes">
                 <field name="nosis_informe_ids">
@@ -20,6 +60,7 @@
                     <field name="nosis_vi_razonSocial"/>
                     <field name="nosis_sco_12m"/>
                     <field name="nosis_cda"/>
+                    <field name="nosis_cda_evaluado"/>
                     <field name="nosis_ci_vig_peorSit"/>
                     <field name="nosis_ci_vig_total_cantBcos"/>
                     <field name="nosis_ci_vig_total_monto"/>
@@ -34,13 +75,28 @@
                   </tree>
                   <form>
                     <group>
-                      <field name="create_date"/>
-                      <field name="nosis_vi_identificacion"/>
-                      <field name="nosis_vi_razonSocial"/>
-                      <field name="nosis_sco_12m"/>
-                      <field name="nosis_cda"/>
-                      <field name="nosis_ci_vig_peorSit"/>
-                      <field name="nosis_ci_vig_total_cantBcos"/>
+                      <group>
+                        <field name="create_date" string="Fecha"/>
+                        <field name="nosis_vi_identificacion"/>
+                        <field name="nosis_vi_razonSocial"/>
+                        <field name="nosis_sco_12m"/>
+                        <field name="nosis_cda"/>
+                        <field name="nosis_cda_evaluado"/>
+                        <field name="nosis_ci_vig_peorSit"/>
+                        <field name="nosis_ci_vig_total_cantBcos"/>
+                        <field name="nosis_ci_vig_total_monto"/>
+                        <field name="nosis_ci_vig_sit1_monto"/>
+                        <field name="nosis_ci_vig_sit2_monto"/>
+                        <field name="nosis_ci_vig_sit3_monto"/>
+                        <field name="nosis_ci_vig_sit4_monto"/>
+                        <field name="nosis_ci_vig_sit5_monto"/>
+                        <field name="nosis_ci_vig_sit6_monto"/>
+                        <field name="nosis_ci_12m_sf_noPag_cant"/>
+                        <field name="nosis_ci_12m_sf_noPag_monto"/>
+                      </group>
+                      <group>
+                        <field name="nosis_cda_detalle" widget="html"/>
+                      </group>
                     </group>
                   </form>
                 </field>
@@ -62,25 +118,28 @@
         <xpath expr="//sheet/notebook" position="before">
           <group string="Resumen del informe Nosis" groups="financiera_nosis.manager">
             <group>
-              <label for="solicitar_informe_nosis"/><button name="solicitar_informe_nosis" string="Solicitar informe" class="oe_highlight oe_read_only" type="object" confirm="Desea solicitar el informe?"/>
-              <field name="nosis_vi_identificacion"/>
-              <field name="nosis_vi_razonSocial"/>
+              <label for="button_solicitar_informe_nosis"/><button name="button_solicitar_informe_nosis" string="Solicitar informe" class="oe_highlight oe_read_only" type="object" confirm="Desea solicitar el informe?"/>
+              <field name="nosis_cda_evaluar" readonly="0" widget="Char"/>
+              <field name="nosis_vi_identificacion" readonly="1"/>
+              <field name="nosis_vi_razonSocial" readonly="1"/>
               <label for="asignar_identidad_nosis"/><button name="asignar_identidad_nosis" string="Asignar identidad Nosis al Cliente" class="oe_highlight oe_read_only" attrs="{'invisible': [('nosis_vi_identificacion', '=', False), ('nosis_vi_razonSocial', '=', False)]}" type="object" confirm="Desea confirmar?"/>
-              <field name="nosis_sco_12m"/>
-              <field name="nosis_cda"/>
-              <field name="nosis_ci_vig_peorSit"/>
-              <field name="nosis_ci_vig_total_cantBcos"/>
-              <field name="nosis_ci_vig_total_monto"/>
-              <field name="nosis_ci_vig_sit1_monto"/>
-              <field name="nosis_ci_vig_sit2_monto"/>
-              <field name="nosis_ci_vig_sit3_monto"/>
-              <field name="nosis_ci_vig_sit4_monto"/>
-              <field name="nosis_ci_vig_sit5_monto"/>
-              <field name="nosis_ci_vig_sit6_monto"/>
-              <field name="nosis_ci_12m_sf_noPag_cant"/>
-              <field name="nosis_ci_12m_sf_noPag_monto"/>
+              <field name="nosis_sco_12m" readonly="1"/>
+              <field name="nosis_ci_vig_peorSit" readonly="1"/>
+              <field name="nosis_ci_vig_total_cantBcos" readonly="1"/>
+              <field name="nosis_ci_vig_total_monto" readonly="1"/>
+              <field name="nosis_ci_vig_sit1_monto" readonly="1"/>
+              <field name="nosis_ci_vig_sit2_monto" readonly="1"/>
+              <field name="nosis_ci_vig_sit3_monto" readonly="1"/>
+              <field name="nosis_ci_vig_sit4_monto" readonly="1"/>
+              <field name="nosis_ci_vig_sit5_monto" readonly="1"/>
+              <field name="nosis_ci_vig_sit6_monto" readonly="1"/>
+              <field name="nosis_ci_12m_sf_noPag_cant" readonly="1"/>
+              <field name="nosis_ci_12m_sf_noPag_monto" readonly="1"/>
+              <field name="nosis_capacidad_pago_mensual" readonly="1"/>
             </group>
             <group>
+              <field name="nosis_cda" readonly="1"/>
+              <field name="nosis_cda_detalle" widget="html" readonly="1"/>
             </group>
           </group>
         </xpath>

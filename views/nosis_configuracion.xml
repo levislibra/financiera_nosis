@@ -26,19 +26,40 @@
                       <group>
                         <field name="company_id" groups="base.group_erp_manager"/>
                         <field name="name"/>
-                      </group>
-                      <group>
-<!--                         <field name="asignar_capacidad_pago_mensual"/>
-                        <field name="dias_vovler_a_consultar"/>
-                        <field name="consultar_distinto_modelo"/> -->
-                      </group>
-                    </group>
-                    <group>
-                      <group string="Información conexión">
+                        <separator string="Información conexión" colspan="2"/>
                         <field name="usuario"/>
                         <field name="token" password="True"/>
                       </group>
                       <group>
+                        <field name="asignar_capacidad_pago_mensual"/>
+                      </group>
+                    </group>
+                    <group>
+                      <group>
+                        <notebook>
+                          <page string="Asignacion CPM segun CDA">
+                            <field name="score_ids">
+                              <tree editable="true">
+                                <field name="score_inicial"/>
+                                <field name="score_final"/>
+                                <field name="capacidad_pago_mensual"/>
+                              </tree>
+                            </field>
+                          </page>
+                        </notebook>
+                      </group>
+                      <group>
+                        <notebook>
+                          <page string="CDA segun Entidad">
+                            <field name="cda_ids">
+                              <tree editable="true">
+                                <field name="entidad_id" required="1"/>
+                                <field name="name" widget="Char" required="1"/>
+                                <field name="active"/>
+                              </tree>
+                            </field>
+                          </page>
+                        </notebook>
                       </group>
                     </group>
                 </sheet>
@@ -61,7 +82,7 @@
     
     <!-- menu categories -->
     
-    <menuitem name="Configuracion" id="menu_config" sequence="0" parent="menu_nosis"/>
+    <menuitem name="Configuracion" id="menu_config" sequence="20" parent="menu_nosis"/>
 
     <menuitem name="Configuracion" id="menu_config_action" sequence="1" parent="menu_config" action="financiera_nosis_action"/>
 

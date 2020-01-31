@@ -11,7 +11,7 @@ import requests
 ENDPOINT_NOSIS = 'https://ws01.nosis.com/rest/variables'
 VARIABLES_NOSIS = 'VI_Identificacion,VI_RazonSocial,CI_Vig_PeorSit,CI_Vig_Total_CantBcos,CI_Vig_Total_Monto,CI_Vig_Sit1_Monto,CI_Vig_Sit2_Monto,CI_Vig_Sit3_Monto,CI_Vig_Sit4_Monto,CI_Vig_Sit5_Monto,CI_Vig_Sit6_Monto,CI_Vig_Detalle_PorEntidad,HC_12m_SF_NoPag_Cant,HC_12m_SF_NoPag_Monto,SCO_12m,CDA'
 
-class ExtendsResPartnerRol(models.Model):
+class ExtendsResPartnerNosis(models.Model):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
 
@@ -20,9 +20,10 @@ class ExtendsResPartnerRol(models.Model):
 	nosis_vi_identificacion = fields.Char('Identificacion')
 	nosis_vi_razonSocial = fields.Char('Razon Social')
 
-	# Resultado
+	# Resumen
 	nosis_sco_12m = fields.Char('Scoring de Riesgo')
 	nosis_cda = fields.Char('Criterio de Aceptacion')
+	nosis_cda_evaluar = fields.Integer('Nro de CDA a evaluar')	
 
 	nosis_ci_vig_peorSit = fields.Integer('Peor Situacion Bancaria')
 	nosis_ci_vig_total_cantBcos = fields.Integer('Cantidad de bancos y ent. fin. vigentes')
@@ -36,9 +37,13 @@ class ExtendsResPartnerRol(models.Model):
 	# nosis_ci_vig_detalle_porEntidad = fields.Char('Identificacion')
 	nosis_ci_12m_sf_noPag_cant = fields.Char('Cantidad Cheques sin fondo no pagados')
 	nosis_ci_12m_sf_noPag_monto = fields.Char('Monto Cheques sin fondo no pagados')
+	# nosis CDA
+	nosis_cda_detalle = fields.Text('CDA Detalle')
+	nosis_cda_evaluado = fields.Integer('CDA evaluado')
+	nosis_capacidad_pago_mensual = fields.Float('Nosis - Capacidad de pago mensual', digits=(16,2))
 
 	@api.one
-	def solicitar_informe_nosis(self, cda=None):
+	def solicitar_informe_nosis(self, cda=0):
 		nosis_configuracion_id = self.company_id.nosis_configuracion_id
 		params = {
 			'usuario': nosis_configuracion_id.usuario,
@@ -47,21 +52,19 @@ class ExtendsResPartnerRol(models.Model):
 			'vr': VARIABLES_NOSIS,
 			'format': 'json',
 		}
-		# if cda == None:
-		# 	cda = nosis_configuracion_id.get_nosis_cda_segun_entidad(self.nosis_entidad_id)[0]
-		# if cda != None:
-		# 	params['cda'] = cda
+		print("CDA", cda)
+		if cda != 0:
+			params['cda'] = cda
+			self.nosis_cda_evaluado = cda
 		
 		response = requests.get(ENDPOINT_NOSIS, params)
 		data = response.json()
 		if response.status_code != 200:
-			print("CODE != 200")
-			print("RESPONSE", response)
 			raise ValidationError("Error en la consulta de informe Nosis: "+data['Contenido']['Resultado']['Novedad'])
 		else:
 			fni_values = {}
+			nosis_cda_detalle = "<ul>"
 			for variable in data['Contenido']['Datos']['Variables']:
-				print("VARIABLE: ", variable)
 				if variable['Nombre'] == 'VI_Identificacion':
 					fni_values['nosis_vi_identificacion'] = variable['Valor']
 					self.nosis_vi_identificacion = variable['Valor']
@@ -122,8 +125,37 @@ class ExtendsResPartnerRol(models.Model):
 					fni_values['nosis_ci_12m_sf_noPag_monto'] = variable['Valor']
 					self.nosis_ci_12m_sf_noPag_monto = variable['Valor']
 
+				if variable['Nombre'] == 'CDA':
+					fni_values['nosis_cda'] = variable['Valor']
+					self.nosis_cda = variable['Valor']
+
+				if 'CDA_' in variable['Nombre']:
+					if variable['Valor'] == 'N/C':
+						nosis_cda_detalle += '<li style="background-color: #E0E5E1">'
+					if variable['Valor'] == 'Ok':
+						nosis_cda_detalle += '<li style="background-color: #33A8FF">'
+					if variable['Valor'] == 'No':
+						nosis_cda_detalle += '<li style="background-color: #DC3B3E">'
+					nosis_cda_detalle += variable['Descripcion']+': '+variable['Valor']+'</li>'
+
+			if len(nosis_cda_detalle) > 5:
+				nosis_cda_detalle += '</ul>'
+				fni_values['nosis_cda_evaluado'] = cda
+				fni_values['nosis_cda_detalle'] = nosis_cda_detalle
+				self.nosis_cda_detalle = nosis_cda_detalle
 			nuevo_informe_id = self.env['financiera.nosis.informe'].create(fni_values)
 			self.nosis_informe_ids = [nuevo_informe_id.id]
+		self.nosis_capacidad_pago_mensual = nosis_configuracion_id.get_capacidad_pago_mensual_segun_score(int(self.nosis_sco_12m))
+		if self.nosis_cda == 'Aprobado':
+			if nosis_configuracion_id.asignar_capacidad_pago_mensual:
+				self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
+		else:
+			if nosis_configuracion_id.asignar_capacidad_pago_mensual:
+				self.capacidad_pago_mensual = 0
+
+	@api.one
+	def button_solicitar_informe_nosis(self):
+		self.solicitar_informe_nosis(self.nosis_cda_evaluar)
 
 	@api.one
 	def asignar_identidad_nosis(self):
@@ -157,7 +189,9 @@ class FinancieraNosisInforme(models.Model):
 	# nosis_ci_vig_detalle_porEntidad = fields.Char('Identificacion')
 	nosis_ci_12m_sf_noPag_cant = fields.Integer('Cantidad Cheques sin fondo no pagados')
 	nosis_ci_12m_sf_noPag_monto = fields.Integer('Monto Cheques sin fondo no pagados')
-
+	# CDA
+	nosis_cda_detalle = fields.Text('CDA Detalle')
+	nosis_cda_evaluado = fields.Integer('CDA evaluado')
 
 
 # class ExtendsFinancieraPrestamo(models.Model):
