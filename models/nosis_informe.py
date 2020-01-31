@@ -194,35 +194,21 @@ class FinancieraNosisInforme(models.Model):
 	nosis_cda_evaluado = fields.Integer('CDA evaluado')
 
 
-# class ExtendsFinancieraPrestamo(models.Model):
-# 	_name = 'financiera.prestamo'
-# 	_inherit = 'financiera.prestamo'
+class ExtendsFinancieraPrestamoNosis(models.Model):
+	_name = 'financiera.prestamo'
+	_inherit = 'financiera.prestamo'
 
-# 	@api.one
-# 	def enviar_a_revision(self):
-# 		if len(self.company_id.rol_configuracion_id) > 0:
-# 			rol_configuracion_id = self.company_id.rol_configuracion_id
-# 			rol_active = rol_configuracion_id.get_rol_active_segun_entidad(self.sucursal_id)[0]
-# 			rol_modelo = rol_configuracion_id.get_rol_modelo_segun_entidad(self.sucursal_id)[0]
-# 			if len(self.comercio_id) > 0:
-# 				rol_active = rol_configuracion_id.get_rol_active_segun_entidad(self.comercio_id)[0]
-# 				rol_modelo = rol_configuracion_id.get_rol_modelo_segun_entidad(self.comercio_id)[0]
-# 			if rol_active:
-# 				dias_vovler_a_consultar = rol_configuracion_id.dias_vovler_a_consultar
-# 				consultar_distinto_modelo = rol_configuracion_id.consultar_distinto_modelo
-# 				rol_dias = False
-# 				if self.partner_id.rol_fecha_informe != False and dias_vovler_a_consultar > 0:
-# 					fecha_inicial = datetime.strptime(str(self.partner_id.rol_fecha_informe), '%Y-%m-%d %H:%M:%S')
-# 					fecha_final = datetime.now()
-# 					diferencia = fecha_final - fecha_inicial
-# 					if diferencia.days >= dias_vovler_a_consultar:
-# 						rol_dias = True
-# 				else:
-# 					rol_dias = True
-				
-# 				rol_distinto_modelo = consultar_distinto_modelo and (rol_modelo != self.partner_id.rol_experto_codigo)
-# 				if rol_dias or rol_distinto_modelo:
-# 					self.partner_id.solicitar_informe(rol_modelo)
-# 				else:
-# 					self.partner_id.consultar_informe()
-# 		super(ExtendsFinancieraPrestamo, self).enviar_a_revision()
+	@api.one
+	def enviar_a_revision(self):
+		if len(self.company_id.nosis_configuracion_id) > 0:
+			nosis_configuracion_id = self.company_id.nosis_configuracion_id
+			nosis_active = nosis_configuracion_id.get_active_segun_entidad(self.sucursal_id)
+			nosis_cda = nosis_configuracion_id.get_cda_segun_entidad(self.sucursal_id)
+			if len(self.comercio_id) > 0:
+				nosis_active = nosis_configuracion_id.get_active_segun_entidad(self.comercio_id)
+				nosis_cda = nosis_configuracion_id.get_cda_segun_entidad(self.comercio_id)
+			print("nosis_active", nosis_active)
+			print("nosis_cda", nosis_cda)
+			if nosis_active:
+				self.partner_id.solicitar_informe_nosis(nosis_cda)
+		super(ExtendsFinancieraPrestamoNosis, self).enviar_a_revision()
