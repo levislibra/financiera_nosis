@@ -52,7 +52,6 @@ class ExtendsResPartnerNosis(models.Model):
 			'vr': VARIABLES_NOSIS,
 			'format': 'json',
 		}
-		print("CDA", cda)
 		if cda != 0:
 			params['cda'] = cda
 			self.nosis_cda_evaluado = cda
@@ -208,8 +207,6 @@ class ExtendsFinancieraPrestamoNosis(models.Model):
 			if len(self.comercio_id) > 0:
 				nosis_active = nosis_configuracion_id.get_active_segun_entidad(self.comercio_id)
 				nosis_cda = nosis_configuracion_id.get_cda_segun_entidad(self.comercio_id)
-			print("nosis_active", nosis_active)
-			print("nosis_cda", nosis_cda)
 			if nosis_active:
 				self.partner_id.solicitar_informe_nosis(nosis_cda)
 		super(ExtendsFinancieraPrestamoNosis, self).enviar_a_revision()

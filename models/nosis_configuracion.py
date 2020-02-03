@@ -28,8 +28,6 @@ class FinancieraNosisConfiguracion(models.Model):
 			'token': self.token,
 		}
 		response = requests.get(ENDPOINT_NOSIS, params)
-		print("RESULTADO", response)
-		print(response.status_code)
 		if response.status_code == 400:
 			raise UserError("La cuenta esta conectada.")
 		else:
