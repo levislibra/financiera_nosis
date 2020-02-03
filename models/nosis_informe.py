@@ -163,6 +163,7 @@ class ExtendsResPartnerNosis(models.Model):
 			self.main_id_number = self.nosis_vi_identificacion
 		if self.nosis_vi_razonSocial != False:
 			self.name = self.nosis_vi_razonSocial
+		self.confirm()
 
 class FinancieraNosisInforme(models.Model):
 	_name = 'financiera.nosis.informe'
