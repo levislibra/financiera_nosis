@@ -17,14 +17,9 @@
           <field name="nosis_ci_vig_peorSit"/>
           <field name="nosis_ci_vig_total_cantBcos"/>
           <field name="nosis_ci_vig_total_monto"/>
-          <field name="nosis_ci_vig_sit1_monto"/>
-          <field name="nosis_ci_vig_sit2_monto"/>
-          <field name="nosis_ci_vig_sit3_monto"/>
-          <field name="nosis_ci_vig_sit4_monto"/>
-          <field name="nosis_ci_vig_sit5_monto"/>
-          <field name="nosis_ci_vig_sit6_monto"/>
           <field name="nosis_ci_12m_sf_noPag_cant"/>
           <field name="nosis_ci_12m_sf_noPag_monto"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
     </record>
@@ -50,7 +45,7 @@
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
         <xpath expr="//page[3]" position='after'>
-          <page string='Nosis' groups="financiera_nosis.manager">
+          <page string='Nosis' groups="financiera_nosis.ver_informe">
             <notebook>
               <page string="Informes">
                 <field name="nosis_informe_ids">
@@ -116,9 +111,9 @@
       <field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
       <field name="arch" type="xml">
         <xpath expr="//sheet/notebook" position="before">
-          <group string="Resumen del informe Nosis" groups="financiera_nosis.manager">
+          <group string="Resumen del informe Nosis" groups="financiera_nosis.ver_informe">
             <group>
-              <label for="button_solicitar_informe_nosis"/><button name="button_solicitar_informe_nosis" string="Solicitar informe" class="oe_highlight oe_read_only" type="object" confirm="Desea solicitar el informe?"/>
+              <label for="button_solicitar_informe_nosis" groups="financiera_nosis.solicitar_informe"/><button name="button_solicitar_informe_nosis" string="Solicitar informe" class="oe_highlight oe_read_only" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
               <field name="nosis_cda_evaluar" readonly="0" widget="Char"/>
               <field name="nosis_vi_identificacion" readonly="1"/>
               <field name="nosis_vi_razonSocial" readonly="1"/>

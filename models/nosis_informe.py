@@ -192,7 +192,7 @@ class FinancieraNosisInforme(models.Model):
 	# CDA
 	nosis_cda_detalle = fields.Text('CDA Detalle')
 	nosis_cda_evaluado = fields.Integer('CDA evaluado')
-
+	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.informe'))
 
 class ExtendsFinancieraPrestamoNosis(models.Model):
 	_name = 'financiera.prestamo'

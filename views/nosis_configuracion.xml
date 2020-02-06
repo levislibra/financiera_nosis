@@ -9,6 +9,7 @@
       <field name="arch" type="xml">
         <tree create="false" delete="false">
           <field name="name"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
     </record>
@@ -43,6 +44,7 @@
                                 <field name="score_inicial"/>
                                 <field name="score_final"/>
                                 <field name="capacidad_pago_mensual"/>
+                                <field name="company_id" groups="base.group_erp_manager"/>
                               </tree>
                             </field>
                           </page>
@@ -56,6 +58,7 @@
                                 <field name="entidad_id" required="1"/>
                                 <field name="name" widget="Char" required="1"/>
                                 <field name="active"/>
+                                <field name="company_id" groups="base.group_erp_manager"/>
                               </tree>
                             </field>
                           </page>
@@ -77,8 +80,7 @@
 
     <!-- Top menu item -->
     
-    <menuitem name="Buro Nosis" id="menu_nosis" web_icon="financiera_nosis,static/description/icon.png" />
-    <!-- groups="financiera_buro_rol_base.manager" -->
+    <menuitem name="Buro Nosis" id="menu_nosis" web_icon="financiera_nosis,static/description/icon.png" groups="financiera_nosis.manager"/>
     
     <!-- menu categories -->
     
