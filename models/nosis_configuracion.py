@@ -17,7 +17,7 @@ class FinancieraNosisConfiguracion(models.Model):
 	token = fields.Char('Token')
 	
 	asignar_capacidad_pago_mensual = fields.Boolean('Asignar capacidad de pago mensual automaticamente')
-	cda_ids = fields.One2many('financiera.nosis.cda', 'configuracion_id', 'CDA segun Entidad')
+	cda_ids = fields.One2many('financiera.nosis.cda', 'configuracion_id', 'CDA segun Entidad', domain=['|', ('active', '=', False), ('active', '=', True)])
 	score_ids = fields.One2many('financiera.nosis.score', 'configuracion_id', 'Asignacion de CPM segun CDA')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.configuracion'))
 	
