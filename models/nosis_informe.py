@@ -26,8 +26,8 @@ class ExtendsResPartnerNosis(models.Model):
 	nosis_cda_evaluar = fields.Integer('Nro de CDA a evaluar')	
 
 	nosis_ci_vig_peorSit = fields.Integer('Peor Situacion Bancaria')
-	nosis_ci_vig_total_cantBcos = fields.Integer('Cantidad de bancos y ent. fin. vigentes')
-	nosis_ci_vig_total_monto = fields.Integer('Monto en todos los bancos y ent. fin. vigentes')
+	nosis_ci_vig_total_cantBcos = fields.Integer('Cant. de bancos y ent. fin. vigentes')
+	nosis_ci_vig_total_monto = fields.Integer('Monto en bancos y ent. fin. vigentes')
 	nosis_ci_vig_sit1_monto = fields.Integer('Monto en sit. 1')
 	nosis_ci_vig_sit2_monto = fields.Integer('Monto en sit. 2')
 	nosis_ci_vig_sit3_monto = fields.Integer('Monto en sit. 3')
@@ -40,7 +40,7 @@ class ExtendsResPartnerNosis(models.Model):
 	# nosis CDA
 	nosis_cda_detalle = fields.Text('CDA Detalle')
 	nosis_cda_evaluado = fields.Integer('CDA evaluado')
-	nosis_capacidad_pago_mensual = fields.Float('Nosis - Capacidad de pago mensual', digits=(16,2))
+	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
 
 	@api.one
 	def solicitar_informe_nosis(self, cda=0):

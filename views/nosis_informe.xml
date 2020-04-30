@@ -110,31 +110,84 @@
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
       <field name="arch" type="xml">
-        <xpath expr="//sheet/notebook" position="before">
-          <group string="Resumen del informe Nosis" groups="financiera_nosis.ver_informe">
-            <group>
-              <label for="button_solicitar_informe_nosis" groups="financiera_nosis.solicitar_informe"/><button name="button_solicitar_informe_nosis" string="Solicitar informe" class="oe_highlight oe_read_only" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
-              <field name="nosis_cda_evaluar" readonly="0" widget="Char"/>
-              <field name="nosis_vi_identificacion" readonly="1"/>
-              <field name="nosis_vi_razonSocial" readonly="1"/>
-              <label for="asignar_identidad_nosis"/><button name="asignar_identidad_nosis" string="Asignar identidad Nosis al Cliente" class="oe_highlight oe_read_only" attrs="{'invisible': [('nosis_vi_identificacion', '=', False), ('nosis_vi_razonSocial', '=', False)]}" type="object" confirm="Desea confirmar?"/>
+        <xpath expr="//group[@name='risk']" position="inside">
+          <group string="Nosis" col="1" style="background-color: #E6E6E6">
+            <group col="1">
               <field name="nosis_sco_12m" readonly="1"/>
-              <field name="nosis_ci_vig_peorSit" readonly="1"/>
-              <field name="nosis_ci_vig_total_cantBcos" readonly="1"/>
-              <field name="nosis_ci_vig_total_monto" readonly="1"/>
-              <field name="nosis_ci_vig_sit1_monto" readonly="1"/>
-              <field name="nosis_ci_vig_sit2_monto" readonly="1"/>
-              <field name="nosis_ci_vig_sit3_monto" readonly="1"/>
-              <field name="nosis_ci_vig_sit4_monto" readonly="1"/>
-              <field name="nosis_ci_vig_sit5_monto" readonly="1"/>
-              <field name="nosis_ci_vig_sit6_monto" readonly="1"/>
-              <field name="nosis_ci_12m_sf_noPag_cant" readonly="1"/>
-              <field name="nosis_ci_12m_sf_noPag_monto" readonly="1"/>
-              <field name="nosis_capacidad_pago_mensual" readonly="1"/>
             </group>
-            <group>
-              <field name="nosis_cda" readonly="1"/>
-              <field name="nosis_cda_detalle" widget="html" readonly="1"/>
+            <group col="2">
+              <group col="1">
+                <field name="nosis_vi_razonSocial" readonly="1"/>
+              </group>
+              <group col="1">
+                <field name="nosis_vi_identificacion" readonly="1"/>
+              </group>
+            </group>
+            <button name="asignar_identidad_nosis" string="Asignar identidad Nosis al Cliente" attrs="{'invisible': [('nosis_vi_identificacion', '=', False), ('nosis_vi_razonSocial', '=', False)]}" type="object" confirm="Desea confirmar?"/>
+            <group col="2">
+              <group col="1">
+                <field name="nosis_cda_evaluado" readonly="1"/>
+              </group>
+              <group col="1">
+                <field name="nosis_cda" readonly="1"/>
+              </group>
+            </group>
+            <group col="1">
+              <group col="1">
+                <field name="nosis_capacidad_pago_mensual" readonly="1"/>
+              </group>
+            </group>
+            <group col="1">
+              <group col="1">
+                <field name="nosis_cda_detalle" widget="html" readonly="1"/>  
+              </group>
+            </group>
+            <group col="2">
+              <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
+            </group>
+          </group>
+        </xpath>
+      </field>
+    </record>
+
+        <!-- Vista Form Riesgo Crediticio -->
+
+    <record id="financiera_res_partner_scoring_form_inherit"  model="ir.ui.view">
+      <field name="name">Extension Partner rol form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="financiera_prestamos.financiera_res_partner_scoring_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//group[@name='risk']" position="after">
+          <group string="Nosis" col="1" style="background-color: #E6E6E6">
+            <group col="1">
+              <group col="1">
+                <field name="nosis_sco_12m" readonly="1"/>
+              </group>
+              <group col="2">
+                <group col="1">
+                  <field name="nosis_vi_razonSocial" readonly="1"/>
+                </group>
+                <group col="1">
+                  <field name="nosis_vi_identificacion" readonly="1"/>
+                </group>
+              </group>
+              <button name="asignar_identidad_nosis" string="Asignar identidad Nosis al Cliente" attrs="{'invisible': [('nosis_vi_identificacion', '=', False), ('nosis_vi_razonSocial', '=', False)]}" type="object" confirm="Desea confirmar?"/>
+              <group col="2">
+                <group col="1">
+                  <field name="nosis_cda_evaluado" readonly="1"/>
+                </group>
+                <group col="1">
+                  <field name="nosis_cda" readonly="1"/>
+                </group>
+              </group>
+              <group col="1">
+                <group col="1">
+                  <field name="nosis_capacidad_pago_mensual" readonly="1"/>
+                </group>
+              </group>
+              <group col="1">
+                <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
+              </group>                
             </group>
           </group>
         </xpath>
