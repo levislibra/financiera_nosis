@@ -41,7 +41,7 @@ class ExtendsResPartnerNosis(models.Model):
 	nosis_cda_detalle = fields.Text('CDA Detalle')
 	nosis_cda_evaluado = fields.Integer('CDA evaluado')
 	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
-	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Tipo de cliente')
+	# nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Tipo de cliente')
 
 	@api.one
 	def solicitar_informe_nosis(self):
@@ -145,9 +145,9 @@ class ExtendsResPartnerNosis(models.Model):
 			if nosis_configuracion_id.asignar_capacidad_pago_mensual:
 				self.nosis_capacidad_pago_mensual = nosis_configuracion_id.get_capacidad_pago_mensual_segun_score(int(self.nosis_sco_12m))
 				self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
-			if nosis_configuracion_id.asignar_partner_tipo:
-				self.nosis_partner_tipo_id = nosis_configuracion_id.get_partner_tipo_segun_score(int(self.nosis_sco_12m))
-				self.partner_tipo_id = self.nosis_capacidad_pago_mensual
+			# if nosis_configuracion_id.asignar_partner_tipo:
+			# 	self.nosis_partner_tipo_id = nosis_configuracion_id.get_partner_tipo_segun_score(int(self.nosis_sco_12m))
+			# 	self.partner_tipo_id = self.nosis_capacidad_pago_mensual
 
 	@api.one
 	def button_solicitar_informe_nosis(self):
