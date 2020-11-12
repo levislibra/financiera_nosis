@@ -32,39 +32,25 @@
                         <field name="token" password="True"/>
                       </group>
                       <group>
-                        <field name="asignar_capacidad_pago_mensual"/>
+												<field name="asignar_capacidad_pago_mensual"/>
+												<field name="asignar_partner_tipo"/>
+												<field name="solicitar_informe_enviar_a_revision"/>
+												<field name="vr"/>
                       </group>
                     </group>
-                    <group>
-                      <group>
-                        <notebook>
-                          <page string="Asignacion CPM segun CDA">
-                            <field name="score_ids">
-                              <tree editable="true">
-                                <field name="score_inicial"/>
-                                <field name="score_final"/>
-                                <field name="capacidad_pago_mensual"/>
-                                <field name="company_id" groups="base.group_erp_manager"/>
-                              </tree>
-                            </field>
-                          </page>
-                        </notebook>
-                      </group>
-                      <group>
-                        <notebook>
-                          <page string="CDA segun Entidad">
-                            <field name="cda_ids">
-                              <tree editable="true">
-                                <field name="entidad_id" required="1"/>
-                                <field name="name" widget="Char" required="1"/>
-                                <field name="active"/>
-                                <field name="company_id" groups="base.group_erp_manager"/>
-                              </tree>
-                            </field>
-                          </page>
-                        </notebook>
-                      </group>
-                    </group>
+										<notebook>
+											<page string="Asignacion CPM segun CDA">
+												<field name="score_ids">
+													<tree editable="true">
+														<field name="score_inicial"/>
+														<field name="score_final"/>
+														<field name="capacidad_pago_mensual"/>
+														<field name="partner_tipo_id"/>
+														<field name="company_id" groups="base.group_erp_manager"/>
+													</tree>
+												</field>
+											</page>
+										</notebook>
                 </sheet>
             </form>
         </field>

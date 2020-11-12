@@ -17,7 +17,9 @@ class FinancieraNosisConfiguracion(models.Model):
 	token = fields.Char('Token')
 	
 	asignar_capacidad_pago_mensual = fields.Boolean('Asignar capacidad de pago mensual automaticamente')
-	cda_ids = fields.One2many('financiera.nosis.cda', 'configuracion_id', 'CDA segun Entidad', domain=['|', ('active', '=', False), ('active', '=', True)])
+	asignar_partner_tipo = fields.Boolean('Asignar tipo de cliente automaticamente')
+	solicitar_informe_enviar_a_revision = fields.Boolean('Solicitar informe al enviar a revision')
+	vr = fields.Integer('Grupo de variables')
 	score_ids = fields.One2many('financiera.nosis.score', 'configuracion_id', 'Asignacion de CPM segun CDA')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.configuracion'))
 	
@@ -33,26 +35,6 @@ class FinancieraNosisConfiguracion(models.Model):
 		else:
 			raise UserError("Error de conexion.")
 
-	def get_cda_segun_entidad(self, entidad_id):
-		result = None
-		for cda_id in self.cda_ids:
-			if cda_id.entidad_id.id == entidad_id.id:
-				if result == None:
-					result = cda_id.name
-				else:
-					raise ValidationError("Nosis: Tiene dos o mas modelos para la misma entidad.")
-		return result
-
-	def get_active_segun_entidad(self, entidad_id):
-		result = None
-		for cda_id in self.cda_ids:
-			if cda_id.entidad_id.id == entidad_id.id:
-				if result == None:
-					result = cda_id.active
-				else:
-					raise ValidationError("Nosis: Tiene dos o mas modelos para la misma entidad.")
-		return result
-
 	def get_capacidad_pago_mensual_segun_score(self, score):
 		result = 0
 		for line in self.score_ids:
@@ -61,14 +43,13 @@ class FinancieraNosisConfiguracion(models.Model):
 				break
 		return result
 
-class FinancieraNosisCDA(models.Model):
-	_name = 'financiera.nosis.cda'
-
-	configuracion_id = fields.Many2one('financiera.nosis.configuracion', "Configuracion Nosis")
-	entidad_id = fields.Many2one('financiera.entidad', 'Entidad')
-	name = fields.Integer('Nro CDA')
-	active = fields.Boolean('Activo')
-	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.cda'))
+	def get_partner_tipo_segun_score(self, score):
+		result = 0
+		for line in self.score_ids:
+			if score >= line.score_inicial and score <= line.score_final:
+				result = line.partner_tipo_id.id
+				break
+		return result
 
 class FinancieraNosisScore(models.Model):
 	_name = 'financiera.nosis.score'
@@ -77,6 +58,7 @@ class FinancieraNosisScore(models.Model):
 	score_inicial = fields.Integer('Score inicial')
 	score_final = fields.Integer('Score final')
 	capacidad_pago_mensual = fields.Float('Capcidad de pago mensual asignada', digits=(16,2))
+	partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Tipo de cliente')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.score'))
 
 class ExtendsResCompany(models.Model):

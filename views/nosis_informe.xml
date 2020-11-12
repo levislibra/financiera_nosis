@@ -133,11 +133,14 @@
                   <field name="nosis_cda" readonly="1"/>
                 </group>
               </group>
-              <group col="1">
-                <group col="1">
-                  <field name="nosis_capacidad_pago_mensual" readonly="1"/>
-                </group>
-              </group>
+              <group col="2">
+								<group col="1">
+									<field name="nosis_capacidad_pago_mensual" readonly="1"/>
+								</group>
+								<group col="1">
+									<field name="nosis_partner_tipo_id" readonly="1"/>
+								</group>
+							</group>
               <group col="1">
                 <group col="1">
                   <field name="nosis_cda_detalle" widget="html" readonly="1"/>  
@@ -184,10 +187,13 @@
                     <field name="nosis_cda" readonly="1"/>
                   </group>
                 </group>
-                <group col="1">
+                <group col="2">
                   <group col="1">
                     <field name="nosis_capacidad_pago_mensual" readonly="1"/>
-                  </group>
+									</group>
+									<group col="1">
+										<field name="nosis_partner_tipo_id" readonly="1"/>
+									</group>
                 </group>
               </group>
             </group>

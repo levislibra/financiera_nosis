@@ -41,21 +41,18 @@ class ExtendsResPartnerNosis(models.Model):
 	nosis_cda_detalle = fields.Text('CDA Detalle')
 	nosis_cda_evaluado = fields.Integer('CDA evaluado')
 	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
+	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Tipo de cliente')
 
 	@api.one
-	def solicitar_informe_nosis(self, cda=0):
+	def solicitar_informe_nosis(self):
 		nosis_configuracion_id = self.company_id.nosis_configuracion_id
 		params = {
 			'usuario': nosis_configuracion_id.usuario,
 			'token': nosis_configuracion_id.token,
 			'documento': self.main_id_number, 
-			'vr': VARIABLES_NOSIS,
+			'vr': nosis_configuracion_id.vr,
 			'format': 'json',
 		}
-		if cda != 0:
-			params['cda'] = cda
-			self.nosis_cda_evaluado = cda
-		
 		response = requests.get(ENDPOINT_NOSIS, params)
 		data = response.json()
 		if response.status_code != 200:
@@ -124,37 +121,37 @@ class ExtendsResPartnerNosis(models.Model):
 					fni_values['nosis_ci_12m_sf_noPag_monto'] = variable['Valor']
 					self.nosis_ci_12m_sf_noPag_monto = variable['Valor']
 
-				if variable['Nombre'] == 'CDA':
-					fni_values['nosis_cda'] = variable['Valor']
-					self.nosis_cda = variable['Valor']
+			# 	if variable['Nombre'] == 'CDA':
+			# 		fni_values['nosis_cda'] = variable['Valor']
+			# 		self.nosis_cda = variable['Valor']
 
-				if 'CDA_' in variable['Nombre']:
-					if variable['Valor'] == 'N/C':
-						nosis_cda_detalle += '<li style="background-color: #E0E5E1">'
-					if variable['Valor'] == 'Ok':
-						nosis_cda_detalle += '<li style="background-color: #33A8FF">'
-					if variable['Valor'] == 'No':
-						nosis_cda_detalle += '<li style="background-color: #DC3B3E">'
-					nosis_cda_detalle += variable['Descripcion']+': '+variable['Valor']+'</li>'
+			# 	if 'CDA_' in variable['Nombre']:
+			# 		if variable['Valor'] == 'N/C':
+			# 			nosis_cda_detalle += '<li style="background-color: #E0E5E1">'
+			# 		if variable['Valor'] == 'Ok':
+			# 			nosis_cda_detalle += '<li style="background-color: #33A8FF">'
+			# 		if variable['Valor'] == 'No':
+			# 			nosis_cda_detalle += '<li style="background-color: #DC3B3E">'
+			# 		nosis_cda_detalle += variable['Descripcion']+': '+variable['Valor']+'</li>'
 
-			if len(nosis_cda_detalle) > 5:
-				nosis_cda_detalle += '</ul>'
-				fni_values['nosis_cda_evaluado'] = cda
-				fni_values['nosis_cda_detalle'] = nosis_cda_detalle
-				self.nosis_cda_detalle = nosis_cda_detalle
+			# if len(nosis_cda_detalle) > 5:
+			# 	nosis_cda_detalle += '</ul>'
+			# 	fni_values['nosis_cda_evaluado'] = cda
+			# 	fni_values['nosis_cda_detalle'] = nosis_cda_detalle
+			# 	self.nosis_cda_detalle = nosis_cda_detalle
 			nuevo_informe_id = self.env['financiera.nosis.informe'].create(fni_values)
 			self.nosis_informe_ids = [nuevo_informe_id.id]
-		self.nosis_capacidad_pago_mensual = nosis_configuracion_id.get_capacidad_pago_mensual_segun_score(int(self.nosis_sco_12m))
-		if self.nosis_cda == 'Aprobado':
+		if self.nosis_sco_12m:
 			if nosis_configuracion_id.asignar_capacidad_pago_mensual:
+				self.nosis_capacidad_pago_mensual = nosis_configuracion_id.get_capacidad_pago_mensual_segun_score(int(self.nosis_sco_12m))
 				self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
-		else:
-			if nosis_configuracion_id.asignar_capacidad_pago_mensual:
-				self.capacidad_pago_mensual = 0
+			if nosis_configuracion_id.asignar_partner_tipo:
+				self.nosis_partner_tipo_id = nosis_configuracion_id.get_partner_tipo_segun_score(int(self.nosis_sco_12m))
+				self.partner_tipo_id = self.nosis_capacidad_pago_mensual
 
 	@api.one
 	def button_solicitar_informe_nosis(self):
-		self.solicitar_informe_nosis(self.nosis_cda_evaluar)
+		self.solicitar_informe_nosis()
 
 	@api.one
 	def asignar_identidad_nosis(self):
@@ -202,11 +199,6 @@ class ExtendsFinancieraPrestamoNosis(models.Model):
 	def enviar_a_revision(self):
 		if len(self.company_id.nosis_configuracion_id) > 0:
 			nosis_configuracion_id = self.company_id.nosis_configuracion_id
-			nosis_active = nosis_configuracion_id.get_active_segun_entidad(self.sucursal_id)
-			nosis_cda = nosis_configuracion_id.get_cda_segun_entidad(self.sucursal_id)
-			if len(self.comercio_id) > 0:
-				nosis_active = nosis_configuracion_id.get_active_segun_entidad(self.comercio_id)
-				nosis_cda = nosis_configuracion_id.get_cda_segun_entidad(self.comercio_id)
-			if nosis_active:
-				self.partner_id.solicitar_informe_nosis(nosis_cda)
+			if nosis_configuracion_id.solicitar_informe_enviar_a_revision:
+				self.partner_id.solicitar_informe_nosis()
 		super(ExtendsFinancieraPrestamoNosis, self).enviar_a_revision()
