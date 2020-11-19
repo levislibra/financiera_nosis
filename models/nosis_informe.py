@@ -147,7 +147,7 @@ class ExtendsResPartnerNosis(models.Model):
 				self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
 			if nosis_configuracion_id.asignar_partner_tipo:
 				self.nosis_partner_tipo_id = nosis_configuracion_id.get_partner_tipo_segun_score(int(self.nosis_sco_12m))
-				self.partner_tipo_id = self.nosis_capacidad_pago_mensual
+				self.partner_tipo_id = self.nosis_partner_tipo_id.id
 
 	@api.one
 	def button_solicitar_informe_nosis(self):
