@@ -21,7 +21,7 @@ class ExtendsResPartnerNosis(models.Model):
 	nosis_vi_razonSocial = fields.Char('Razon Social')
 
 	# Resumen
-	# nosis_sco_vig = fields.Char('Scoring de Riesgo')
+	nosis_sco_vig = fields.Char('Scoring de Riesgo')
 	nosis_sco_12m = fields.Char('Scoring de Riesgo 12m')
 	nosis_cda = fields.Char('Criterio de Aceptacion')
 	nosis_cda_evaluar = fields.Integer('Nro de CDA a evaluar')	
