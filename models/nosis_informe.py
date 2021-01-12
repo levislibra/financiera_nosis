@@ -21,7 +21,8 @@ class ExtendsResPartnerNosis(models.Model):
 	nosis_vi_razonSocial = fields.Char('Razon Social')
 
 	# Resumen
-	nosis_sco_12m = fields.Char('Scoring de Riesgo')
+	nosis_sco_vig = fields.Char('Scoring de Riesgo')
+	nosis_sco_12m = fields.Char('Scoring de Riesgo 12m')
 	nosis_cda = fields.Char('Criterio de Aceptacion')
 	nosis_cda_evaluar = fields.Integer('Nro de CDA a evaluar')	
 
@@ -72,6 +73,10 @@ class ExtendsResPartnerNosis(models.Model):
 				if variable['Nombre'] == 'SCO_12m':
 					fni_values['nosis_sco_12m'] = variable['Valor']
 					self.nosis_sco_12m = variable['Valor']
+				
+				if variable['Nombre'] == 'SCO_Vig':
+					fni_values['nosis_sco_vig'] = variable['Valor']
+					self.nosis_sco_vig = variable['Valor']
 
 				if variable['Nombre'] == 'CDA':
 					fni_values['nosis_cda'] = variable['Valor']
@@ -141,12 +146,12 @@ class ExtendsResPartnerNosis(models.Model):
 			# 	self.nosis_cda_detalle = nosis_cda_detalle
 			nuevo_informe_id = self.env['financiera.nosis.informe'].create(fni_values)
 			self.nosis_informe_ids = [nuevo_informe_id.id]
-		if self.nosis_sco_12m:
+		if self.nosis_sco_vig:
 			if nosis_configuracion_id.asignar_capacidad_pago_mensual:
-				self.nosis_capacidad_pago_mensual = nosis_configuracion_id.get_capacidad_pago_mensual_segun_score(int(self.nosis_sco_12m))
+				self.nosis_capacidad_pago_mensual = nosis_configuracion_id.get_capacidad_pago_mensual_segun_score(int(self.nosis_sco_vig))
 				self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
 			if nosis_configuracion_id.asignar_partner_tipo:
-				self.nosis_partner_tipo_id = nosis_configuracion_id.get_partner_tipo_segun_score(int(self.nosis_sco_12m))
+				self.nosis_partner_tipo_id = nosis_configuracion_id.get_partner_tipo_segun_score(int(self.nosis_sco_vig))
 				self.partner_tipo_id = self.nosis_partner_tipo_id.id
 
 	@api.one
@@ -171,7 +176,8 @@ class FinancieraNosisInforme(models.Model):
 	nosis_vi_razonSocial = fields.Char('Razon Social')
 
 	# Resultado
-	nosis_sco_12m = fields.Char('Scoring de Riesgo')
+	nosis_sco_vig = fields.Char('Scoring de Riesgo')
+	nosis_sco_12m = fields.Char('Scoring de Riesgo 12m')
 	nosis_cda = fields.Char('Criterio de Aceptacion')
 
 	nosis_ci_vig_peorSit = fields.Integer('Peor Situacion Bancaria')

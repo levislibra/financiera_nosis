@@ -11,7 +11,7 @@
           <field name="partner_id"/>
           <field name="nosis_vi_identificacion"/>
           <field name="nosis_vi_razonSocial"/>
-          <field name="nosis_sco_12m"/>
+          <field name="nosis_sco_vig"/>
           <field name="nosis_cda"/>
           <field name="nosis_cda_evaluado"/>
           <field name="nosis_ci_vig_peorSit"/>
@@ -53,7 +53,7 @@
                     <field name="create_date" string="Fecha"/>
                     <field name="nosis_vi_identificacion"/>
                     <field name="nosis_vi_razonSocial"/>
-                    <field name="nosis_sco_12m"/>
+                    <field name="nosis_sco_vig"/>
                     <field name="nosis_cda"/>
                     <field name="nosis_cda_evaluado"/>
                     <field name="nosis_ci_vig_peorSit"/>
@@ -74,7 +74,7 @@
                         <field name="create_date" string="Fecha"/>
                         <field name="nosis_vi_identificacion"/>
                         <field name="nosis_vi_razonSocial"/>
-                        <field name="nosis_sco_12m"/>
+                        <field name="nosis_sco_vig"/>
                         <field name="nosis_cda"/>
                         <field name="nosis_cda_evaluado"/>
                         <field name="nosis_ci_vig_peorSit"/>
@@ -114,7 +114,7 @@
           <group string="Nosis" col="1" style="background-color: #E6E6E6">
             <group col="1" attrs="{'invisible': [('nosis_vi_identificacion', '=', False)]}">
               <group col="1">
-                <field name="nosis_sco_12m" readonly="1"/>
+                <field name="nosis_sco_vig" readonly="1"/>
               </group>
               <group col="2">
                 <group col="1">
@@ -168,7 +168,7 @@
             <group col="1" attrs="{'invisible': [('nosis_vi_identificacion', '=', False)]}">
               <group col="1">
                 <group col="1">
-                  <field name="nosis_sco_12m" readonly="1"/>
+                  <field name="nosis_sco_vig" readonly="1"/>
                 </group>
                 <group col="2">
                   <group col="1">
