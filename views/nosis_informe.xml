@@ -105,7 +105,7 @@
 
     <!-- Vista Form Partner Buro Nosis -->
 
-    <record id="partner_nosis_basic_form_inherited"  model="ir.ui.view">
+    <!-- <record id="partner_nosis_basic_form_inherited"  model="ir.ui.view">
       <field name="name">Extension Partner Nosis form</field>
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
@@ -154,11 +154,11 @@
           </group>
         </xpath>
       </field>
-    </record>
+    </record> -->
 
         <!-- Vista Form Riesgo Crediticio -->
 
-    <record id="financiera_res_partner_scoring_form_inherit"  model="ir.ui.view">
+    <!-- <record id="financiera_res_partner_scoring_form_inherit"  model="ir.ui.view">
       <field name="name">Extension Partner rol form</field>
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="financiera_prestamos.financiera_res_partner_scoring_form"/>
@@ -204,7 +204,7 @@
           </group>
         </xpath>
       </field>
-    </record>
+    </record> -->
 
   </data>
 </openerp>
