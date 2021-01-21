@@ -105,12 +105,12 @@
 
     <!-- Vista Form Partner Buro Nosis -->
 
-    <!-- <record id="partner_nosis_basic_form_inherited"  model="ir.ui.view">
+    <record id="partner_nosis_basic_form_inherited"  model="ir.ui.view">
       <field name="name">Extension Partner Nosis form</field>
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
       <field name="arch" type="xml">
-        <xpath expr="//group[@name='risk']" position="inside">
+        <!-- <xpath expr="//group[@name='risk']" position="inside">
           <group string="Nosis" col="1" style="background-color: #E6E6E6">
             <group col="1" attrs="{'invisible': [('nosis_vi_identificacion', '=', False)]}">
               <group col="1">
@@ -152,18 +152,18 @@
               <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
             </group>
           </group>
-        </xpath>
+        </xpath> -->
       </field>
-    </record> -->
+    </record>
 
         <!-- Vista Form Riesgo Crediticio -->
 
-    <!-- <record id="financiera_res_partner_scoring_form_inherit"  model="ir.ui.view">
+    <record id="financiera_res_partner_scoring_form_inherit"  model="ir.ui.view">
       <field name="name">Extension Partner rol form</field>
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="financiera_prestamos.financiera_res_partner_scoring_form"/>
       <field name="arch" type="xml">
-        <xpath expr="//group[@name='risk']" position="after">
+        <!-- <xpath expr="//group[@name='risk']" position="after">
           <group string="Nosis" col="1" style="background-color: #E6E6E6">
             <group col="1" attrs="{'invisible': [('nosis_vi_identificacion', '=', False)]}">
               <group col="1">
@@ -202,9 +202,9 @@
               <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
             </group>
           </group>
-        </xpath>
+        </xpath> -->
       </field>
-    </record> -->
+    </record>
 
   </data>
 </openerp>
