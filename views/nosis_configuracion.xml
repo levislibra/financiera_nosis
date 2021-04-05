@@ -34,6 +34,7 @@
                       <group>
 												<field name="asignar_capacidad_pago_mensual"/>
 												<field name="asignar_partner_tipo"/>
+												<field name="asginar_solo_cda_aprobado"/>
 												<field name="solicitar_informe_enviar_a_revision"/>
 												<field name="vr"/>
                       </group>

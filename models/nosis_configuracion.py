@@ -18,6 +18,7 @@ class FinancieraNosisConfiguracion(models.Model):
 	
 	asignar_capacidad_pago_mensual = fields.Boolean('Asignar capacidad de pago mensual automaticamente')
 	asignar_partner_tipo = fields.Boolean('Asignar tipo de cliente automaticamente')
+	asginar_solo_cda_aprobado = fields.Boolean('Asignar CPM o Tipo de cliente solo a CDA aprobado')
 	solicitar_informe_enviar_a_revision = fields.Boolean('Solicitar informe al enviar a revision')
 	vr = fields.Integer('Grupo de variables')
 	score_ids = fields.One2many('financiera.nosis.score', 'configuracion_id', 'Asignacion de CPM segun CDA')

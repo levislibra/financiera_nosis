@@ -149,10 +149,16 @@ class ExtendsResPartnerNosis(models.Model):
 		if self.nosis_sco_vig:
 			if nosis_configuracion_id.asignar_capacidad_pago_mensual:
 				self.nosis_capacidad_pago_mensual = nosis_configuracion_id.get_capacidad_pago_mensual_segun_score(int(self.nosis_sco_vig))
-				self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
+				if not nosis_configuracion_id.asginar_solo_cda_aprobado or (nosis_configuracion_id.asginar_solo_cda_aprobado and self.nosis_cda == 'Aprobado'):
+					self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
+				else:
+					self.capacidad_pago_mensual = 0
 			if nosis_configuracion_id.asignar_partner_tipo:
 				self.nosis_partner_tipo_id = nosis_configuracion_id.get_partner_tipo_segun_score(int(self.nosis_sco_vig))
-				self.partner_tipo_id = self.nosis_partner_tipo_id.id
+				if not nosis_configuracion_id.asginar_solo_cda_aprobado or (nosis_configuracion_id.asginar_solo_cda_aprobado and self.nosis_cda == 'Aprobado'):
+					self.partner_tipo_id = self.nosis_partner_tipo_id.id
+				else:
+					self.partner_tipo_id = None
 
 	@api.one
 	def button_solicitar_informe_nosis(self):
