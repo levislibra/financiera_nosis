@@ -36,28 +36,16 @@ class FinancieraNosisConfiguracion(models.Model):
 		else:
 			raise UserError("Error de conexion.")
 
-	def get_capacidad_pago_mensual_segun_score(self, score):
-		result = 0
-		for line in self.score_ids:
-			if score >= line.score_inicial and score <= line.score_final:
-				result = line.capacidad_pago_mensual
-				break
-		return result
-
-	def get_partner_tipo_segun_score(self, score):
-		result = 0
-		for line in self.score_ids:
-			if score >= line.score_inicial and score <= line.score_final:
-				result = line.partner_tipo_id.id
-				break
-		return result
-
 class FinancieraNosisScore(models.Model):
 	_name = 'financiera.nosis.score'
 
+	_order = 'orden asc'
 	configuracion_id = fields.Many2one('financiera.nosis.configuracion', "Configuracion Nosis")
-	score_inicial = fields.Integer('Score inicial')
-	score_final = fields.Integer('Score final')
+	orden = fields.Integer('Orden', help='Orden de ejecucion. De 1 a 999, siendo 1 de mayor prioridad.')
+	score_inicial = fields.Integer('Score inicial', default=-1)
+	score_final = fields.Integer('Score final', default=-1)
+	nosis_ci_vig_total_monto_inicial = fields.Integer('Monto en bancos y ent. fin. inicial', default=-1)
+	nosis_ci_vig_total_monto_final = fields.Integer('Monto en bancos y ent. fin. final', default=-1)
 	capacidad_pago_mensual = fields.Float('Capcidad de pago mensual asignada', digits=(16,2))
 	partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Tipo de cliente')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.score'))

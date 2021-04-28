@@ -114,7 +114,7 @@
           <group string="Nosis" col="1" style="background-color: #E6E6E6">
             <group col="1" attrs="{'invisible': [('nosis_vi_identificacion', '=', False)]}">
               <group col="1">
-                <field name="nosis_sco_vig" readonly="1"/>
+                <field name="nosis_sco_vig" readonly="0"/>
               </group>
               <group col="2">
                 <group col="1">
@@ -143,13 +143,14 @@
 							</group>
               <group col="1">
                 <group col="1">
-                  <field name="nosis_cda_detalle" widget="html" readonly="1"/>  
+                  <field name="nosis_ci_vig_total_monto"/>
                 </group>
               </group>
             </group>
             <separate col="1"/>
             <group col="2">
               <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
+							<button name="asignar_cpm_y_tipo_cliente_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
             </group>
           </group>
         </xpath>

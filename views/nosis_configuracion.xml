@@ -43,8 +43,11 @@
 											<page string="Asignacion CPM segun CDA">
 												<field name="score_ids">
 													<tree editable="true">
+														<field name="orden"/>
 														<field name="score_inicial"/>
 														<field name="score_final"/>
+														<field name="nosis_ci_vig_total_monto_inicial"/>
+														<field name="nosis_ci_vig_total_monto_final"/>
 														<field name="capacidad_pago_mensual"/>
 														<field name="partner_tipo_id"/>
 														<field name="company_id" groups="base.group_erp_manager"/>
