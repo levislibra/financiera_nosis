@@ -34,16 +34,21 @@
                       <group>
 												<field name="asignar_capacidad_pago_mensual"/>
 												<field name="asignar_partner_tipo"/>
-												<field name="asginar_solo_cda_aprobado"/>
+												<!-- <field name="asginar_solo_cda_aprobado"/> -->
 												<field name="solicitar_informe_enviar_a_revision"/>
 												<field name="vr"/>
                       </group>
                     </group>
 										<notebook>
-											<page string="Asignacion CPM segun CDA">
+											<page string="Asignacion CPM y Tipo de Cliente segun CDA">
+												<group col="1">
+													<field name="fecha_desde"/>
+													<button name="actualizar_cda_partners" string="Actualizar clientes segun CDA's" type="object" />
+												</group>
 												<field name="score_ids">
 													<tree editable="true">
 														<field name="orden"/>
+														<field name="cda_resultado" required="1"/>
 														<field name="score_inicial"/>
 														<field name="score_final"/>
 														<field name="nosis_ci_vig_total_monto_inicial"/>

@@ -151,24 +151,30 @@ class ExtendsResPartnerNosis(models.Model):
 	@api.one
 	def asignar_cpm_y_tipo_cliente_nosis(self):
 		nosis_configuracion_id = self.company_id.nosis_configuracion_id
+		self.capacidad_pago_mensual = 0
+		self.partner_tipo_id = None
 		for line in nosis_configuracion_id.score_ids:
 			if self.nosis_vi_identificacion and self.nosis_sco_vig:
 				score = int(self.nosis_sco_vig)
-				if ((line.score_inicial == -1 or score >= line.score_inicial) and (line.score_final == -1 or score <= line.score_final)):
-					if ((line.nosis_ci_vig_total_monto_inicial == -1 or self.nosis_ci_vig_total_monto >= line.nosis_ci_vig_total_monto_inicial) and (line.nosis_ci_vig_total_monto_final == -1 or self.nosis_ci_vig_total_monto <= line.nosis_ci_vig_total_monto_final)):
-						if nosis_configuracion_id.asignar_capacidad_pago_mensual:
-							self.nosis_capacidad_pago_mensual = line.capacidad_pago_mensual
-							if not nosis_configuracion_id.asginar_solo_cda_aprobado or (nosis_configuracion_id.asginar_solo_cda_aprobado and self.nosis_cda == 'Aprobado'):
+				cda_check = line.cda_resultado == 'no_controlar'
+				cda_check = cda_check or (line.cda_resultado == 'aprobado' and self.nosis_cda == 'Aprobado')
+				cda_check = cda_check or (line.cda_resultado == 'aprobado_bueno' and (self.nosis_cda == 'Aprobado' or self.nosis_cda == 'Bueno'))
+				if cda_check:
+					score_inicial_check = line.score_inicial == -1 or score >= line.score_inicial
+					score_final_check = line.score_final == -1 or score <= line.score_final
+					score_check = score_inicial_check and score_final_check
+					if score_check:
+						monto_deuda_inicial_check = line.nosis_ci_vig_total_monto_inicial == -1 or self.nosis_ci_vig_total_monto >= line.nosis_ci_vig_total_monto_inicial
+						monto_deuda_final_check = line.nosis_ci_vig_total_monto_final == -1 or self.nosis_ci_vig_total_monto <= line.nosis_ci_vig_total_monto_final
+						monto_deuda_check = monto_deuda_inicial_check and monto_deuda_final_check
+						if monto_deuda_check:
+							if nosis_configuracion_id.asignar_capacidad_pago_mensual:
+								self.nosis_capacidad_pago_mensual = line.capacidad_pago_mensual
 								self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
-							else:
-								self.capacidad_pago_mensual = 0
-						if nosis_configuracion_id.asignar_partner_tipo:
-							self.nosis_partner_tipo_id = line.partner_tipo_id.id
-							if not nosis_configuracion_id.asginar_solo_cda_aprobado or (nosis_configuracion_id.asginar_solo_cda_aprobado and self.nosis_cda == 'Aprobado'):
+							if nosis_configuracion_id.asignar_partner_tipo:
+								self.nosis_partner_tipo_id = line.partner_tipo_id.id
 								self.partner_tipo_id = self.nosis_partner_tipo_id.id
-							else:
-								self.partner_tipo_id = None
-						break
+							break
 
 	@api.one
 	def button_solicitar_informe_nosis(self):
