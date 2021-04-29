@@ -49,8 +49,6 @@ class FinancieraNosisConfiguracion(models.Model):
 			informe_id = self.env['financiera.nosis.informe'].browse(_id)
 			partner_id = informe_id.partner_id
 			partner_id.asignar_cpm_y_tipo_cliente_nosis()
-			print("actualizamos:", partner_id.name)
-			print("actualizamos:", informe_id.create_date)
 		self.fecha_desde = False
 
 class FinancieraNosisScore(models.Model):
