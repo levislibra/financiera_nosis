@@ -1,0 +1,66 @@
+<openerp>
+  <data>
+
+    <!-- Financiera prestamo -->
+
+    <record model="ir.ui.view" id="financiera_var_nosis_otorgamientos_tree">
+      <field name="name">financiera.prestamo.tree</field>
+      <field name="model">financiera.prestamo</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false">
+          <field name="partner_id"/>
+          
+					<field name="nosis_vi_identificacion"/>
+          <field name="nosis_vi_razonSocial"/>
+          
+					<field name="nosis_sco_vig"/>
+					<field name="nosis_sco_12m"/>
+					<field name="nosis_cda"/>
+
+          <field name="nosis_ci_vig_peorSit"/>
+          <field name="nosis_ci_vig_total_cantBcos"/>
+          <field name="nosis_ci_vig_total_monto"/>
+					<field name="nosis_ci_vig_sit1_monto"/>
+					<field name="nosis_ci_vig_sit2_monto"/>
+					<field name="nosis_ci_vig_sit3_monto"/>
+					<field name="nosis_ci_vig_sit4_monto"/>
+					<field name="nosis_ci_vig_sit5_monto"/>
+					<field name="nosis_ci_vig_sit6_monto"/>
+          <field name="nosis_ci_12m_sf_noPag_cant"/>
+          <field name="nosis_ci_12m_sf_noPag_monto"/>
+
+					<field name="nosis_capacidad_pago_mensual"/>
+					<field name="nosis_partner_tipo_id"/>
+
+					<field name="name"/>
+					<field name="monto_solicitado" sum="Total"/>
+					<field name="plan_id"/>
+					<field name="saldo" sum="Total"/>
+					<field name="cuotas"/>
+          <field name="cuotas_cobradas"/>
+          <field name="sucursal_id"/>
+          <field name="state"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="financiera_var_nosis_otorgamientos_action">
+      <field name="name">Variables Nosis y prestamos</field>
+      <field name="res_model">financiera.prestamo</field>
+			<field name="domain">[('nosis_vi_identificacion','!=', False)]</field>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="financiera_var_nosis_otorgamientos_tree"/>
+    </record>
+
+
+	  <menuitem name="Analisis" id="menu_var_nosis_analytics" sequence="15" parent="menu_nosis"/>
+
+    <menuitem name="Variables Nosis en otorgamientos" id="menu_var_nosis_otorgamientos_action" sequence="5" parent="menu_var_nosis_analytics" 
+			action="financiera_var_nosis_otorgamientos_action"/>
+
+
+
+
+  </data>
+</openerp>

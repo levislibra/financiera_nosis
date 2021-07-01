@@ -30,6 +30,8 @@
         'views/extends_res_company.xml',
         'views/nosis_configuracion.xml',
         'views/nosis_informe.xml',
+				'views/extends_financiera_prestamo.xml',
+				'data/ir_cron.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
