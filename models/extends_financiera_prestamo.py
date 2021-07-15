@@ -37,6 +37,14 @@ class ExtendsFinancieraPrestamo(models.Model):
 	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
 	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Nosis - Tipo de cliente')
 
+	@api.one
+	def enviar_a_revision(self):
+		if len(self.company_id.nosis_configuracion_id) > 0:
+			nosis_configuracion_id = self.company_id.nosis_configuracion_id
+			if nosis_configuracion_id.solicitar_informe_enviar_a_revision:
+				self.partner_id.solicitar_informe_nosis()
+		super(ExtendsFinancieraPrestamo, self).enviar_a_revision()
+
 	def pass_var_partner_to_prestamo(self):
 		if self.partner_id.nosis_vi_identificacion:
 			self.nosis_vi_identificacion = self.partner_id.nosis_vi_identificacion

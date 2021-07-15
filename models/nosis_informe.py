@@ -1,192 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
-from datetime import datetime, timedelta
-from dateutil import relativedelta
-from datetime import date
-from openerp.exceptions import UserError, ValidationError
-import time
-import requests
-
-ENDPOINT_NOSIS = 'https://ws01.nosis.com/rest/variables'
-VARIABLES_NOSIS = 'VI_Identificacion,VI_RazonSocial,CI_Vig_PeorSit,CI_Vig_Total_CantBcos,CI_Vig_Total_Monto,CI_Vig_Sit1_Monto,CI_Vig_Sit2_Monto,CI_Vig_Sit3_Monto,CI_Vig_Sit4_Monto,CI_Vig_Sit5_Monto,CI_Vig_Sit6_Monto,CI_Vig_Detalle_PorEntidad,HC_12m_SF_NoPag_Cant,HC_12m_SF_NoPag_Monto,SCO_12m,CDA'
-
-class ExtendsResPartnerNosis(models.Model):
-	_name = 'res.partner'
-	_inherit = 'res.partner'
-
-	nosis_informe_ids = fields.One2many('financiera.nosis.informe', 'partner_id', 'Nosis - Informes')
-	# Validacion de identidad
-	nosis_vi_identificacion = fields.Char('Nosis - Identificacion')
-	nosis_vi_razonSocial = fields.Char('Nosis - Razon Social')
-
-	# Resumen
-	nosis_sco_vig = fields.Char('Nosis - Scoring de Riesgo')
-	nosis_sco_12m = fields.Char('Nosis - Scoring de Riesgo 12m')
-	nosis_cda = fields.Char('Nosis - Criterio de Aceptacion')
-	nosis_cda_evaluar = fields.Integer('Nosis - Nro de CDA a evaluar')	
-
-	nosis_ci_vig_peorSit = fields.Integer('Nosis - Peor Situacion Bancaria')
-	nosis_ci_vig_total_cantBcos = fields.Integer('Nosis - Cant. de bancos y ent. fin. vigentes')
-	nosis_ci_vig_total_monto = fields.Integer('Nosis - Monto en bancos y ent. fin. vigentes')
-	nosis_ci_vig_sit1_monto = fields.Integer('Monto en sit. 1')
-	nosis_ci_vig_sit2_monto = fields.Integer('Monto en sit. 2')
-	nosis_ci_vig_sit3_monto = fields.Integer('Monto en sit. 3')
-	nosis_ci_vig_sit4_monto = fields.Integer('Monto en sit. 4')
-	nosis_ci_vig_sit5_monto = fields.Integer('Monto en sit. 5')
-	nosis_ci_vig_sit6_monto = fields.Integer('Monto en sit. 6')
-	# nosis_ci_vig_detalle_porEntidad = fields.Char('Identificacion')
-	nosis_ci_12m_sf_noPag_cant = fields.Char('Nosis - Cantidad Cheques sin fondo no pagados')
-	nosis_ci_12m_sf_noPag_monto = fields.Char('Nosis - Monto Cheques sin fondo no pagados')
-	# nosis CDA
-	nosis_cda_detalle = fields.Text('Nosis - CDA Detalle')
-	nosis_cda_evaluado = fields.Integer('Nosis - CDA evaluado')
-	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
-	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Nosis - Tipo de cliente')
-
-	@api.one
-	def solicitar_informe_nosis(self):
-		nosis_configuracion_id = self.company_id.nosis_configuracion_id
-		params = {
-			'usuario': nosis_configuracion_id.usuario,
-			'token': nosis_configuracion_id.token,
-			'documento': self.main_id_number, 
-			'vr': nosis_configuracion_id.vr,
-			'format': 'json',
-		}
-		response = requests.get(ENDPOINT_NOSIS, params)
-		data = response.json()
-		if response.status_code != 200:
-			raise ValidationError("Error en la consulta de informe Nosis: "+data['Contenido']['Resultado']['Novedad'])
-		else:
-			fni_values = {}
-			nosis_cda_detalle = "<ul>"
-			for variable in data['Contenido']['Datos']['Variables']:
-				if variable['Nombre'] == 'VI_Identificacion':
-					fni_values['nosis_vi_identificacion'] = variable['Valor']
-					self.nosis_vi_identificacion = variable['Valor']
-
-				if variable['Nombre'] == 'VI_RazonSocial':
-					fni_values['nosis_vi_razonSocial'] = variable['Valor']
-					self.nosis_vi_razonSocial = variable['Valor']
-
-				if variable['Nombre'] == 'SCO_12m':
-					fni_values['nosis_sco_12m'] = variable['Valor']
-					self.nosis_sco_12m = variable['Valor']
-				
-				if variable['Nombre'] == 'SCO_Vig':
-					fni_values['nosis_sco_vig'] = variable['Valor']
-					self.nosis_sco_vig = variable['Valor']
-
-				if variable['Nombre'] == 'CDA':
-					fni_values['nosis_cda'] = variable['Valor']
-					self.nosis_cda = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_PeorSit':
-					fni_values['nosis_ci_vig_peorSit'] = variable['Valor']
-					self.nosis_ci_vig_peorSit = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Total_CantBcos':
-					fni_values['nosis_ci_vig_total_cantBcos'] = variable['Valor']
-					self.nosis_ci_vig_total_cantBcos = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Total_Monto':
-					fni_values['nosis_ci_vig_total_monto'] = variable['Valor']
-					self.nosis_ci_vig_total_monto = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Sit1_Monto':
-					fni_values['nosis_ci_vig_sit1_monto'] = variable['Valor']
-					self.nosis_ci_vig_sit1_monto = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Sit2_Monto':
-					fni_values['nosis_ci_vig_sit2_monto'] = variable['Valor']
-					self.nosis_ci_vig_sit2_monto = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Sit3_Monto':
-					fni_values['nosis_ci_vig_sit3_monto'] = variable['Valor']
-					self.nosis_ci_vig_sit3_monto = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Sit4_Monto':
-					fni_values['nosis_ci_vig_sit4_monto'] = variable['Valor']
-					self.nosis_ci_vig_sit4_monto = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Sit5_Monto':
-					fni_values['nosis_ci_vig_sit5_monto'] = variable['Valor']
-					self.nosis_ci_vig_sit5_monto = variable['Valor']
-
-				if variable['Nombre'] == 'CI_Vig_Sit6_Monto':
-					fni_values['nosis_ci_vig_sit6_monto'] = variable['Valor']
-					self.nosis_ci_vig_sit6_monto = variable['Valor']
-
-				if variable['Nombre'] == 'HC_12m_SF_NoPag_Cant':
-					fni_values['nosis_ci_12m_sf_noPag_cant'] = variable['Valor']
-					self.nosis_ci_12m_sf_noPag_cant = variable['Valor']
-
-				if variable['Nombre'] == 'HC_12m_SF_NoPag_Monto':
-					fni_values['nosis_ci_12m_sf_noPag_monto'] = variable['Valor']
-					self.nosis_ci_12m_sf_noPag_monto = variable['Valor']
-
-			# 	if variable['Nombre'] == 'CDA':
-			# 		fni_values['nosis_cda'] = variable['Valor']
-			# 		self.nosis_cda = variable['Valor']
-
-			# 	if 'CDA_' in variable['Nombre']:
-			# 		if variable['Valor'] == 'N/C':
-			# 			nosis_cda_detalle += '<li style="background-color: #E0E5E1">'
-			# 		if variable['Valor'] == 'Ok':
-			# 			nosis_cda_detalle += '<li style="background-color: #33A8FF">'
-			# 		if variable['Valor'] == 'No':
-			# 			nosis_cda_detalle += '<li style="background-color: #DC3B3E">'
-			# 		nosis_cda_detalle += variable['Descripcion']+': '+variable['Valor']+'</li>'
-
-			# if len(nosis_cda_detalle) > 5:
-			# 	nosis_cda_detalle += '</ul>'
-			# 	fni_values['nosis_cda_evaluado'] = cda
-			# 	fni_values['nosis_cda_detalle'] = nosis_cda_detalle
-			# 	self.nosis_cda_detalle = nosis_cda_detalle
-			nuevo_informe_id = self.env['financiera.nosis.informe'].create(fni_values)
-			self.nosis_informe_ids = [nuevo_informe_id.id]
-			self.asignar_cpm_y_tipo_cliente_nosis()
-
-	@api.one
-	def asignar_cpm_y_tipo_cliente_nosis(self):
-		nosis_configuracion_id = self.company_id.nosis_configuracion_id
-		self.capacidad_pago_mensual = 0
-		self.partner_tipo_id = None
-		for line in nosis_configuracion_id.score_ids:
-			if self.nosis_vi_identificacion and self.nosis_sco_vig:
-				score = int(self.nosis_sco_vig)
-				cda_check = line.cda_resultado == 'no_controlar'
-				cda_check = cda_check or (line.cda_resultado == 'aprobado' and self.nosis_cda == 'Aprobado')
-				cda_check = cda_check or (line.cda_resultado == 'aprobado_bueno' and (self.nosis_cda == 'Aprobado' or self.nosis_cda == 'Bueno'))
-				if cda_check:
-					score_inicial_check = line.score_inicial == -1 or score >= line.score_inicial
-					score_final_check = line.score_final == -1 or score <= line.score_final
-					score_check = score_inicial_check and score_final_check
-					if score_check:
-						monto_deuda_inicial_check = line.nosis_ci_vig_total_monto_inicial == -1 or self.nosis_ci_vig_total_monto >= line.nosis_ci_vig_total_monto_inicial
-						monto_deuda_final_check = line.nosis_ci_vig_total_monto_final == -1 or self.nosis_ci_vig_total_monto <= line.nosis_ci_vig_total_monto_final
-						monto_deuda_check = monto_deuda_inicial_check and monto_deuda_final_check
-						if monto_deuda_check:
-							if nosis_configuracion_id.asignar_capacidad_pago_mensual:
-								self.nosis_capacidad_pago_mensual = line.capacidad_pago_mensual
-								self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
-							if nosis_configuracion_id.asignar_partner_tipo:
-								self.nosis_partner_tipo_id = line.partner_tipo_id.id
-								self.partner_tipo_id = self.nosis_partner_tipo_id.id
-							break
-
-	@api.one
-	def button_solicitar_informe_nosis(self):
-		self.solicitar_informe_nosis()
-
-	@api.one
-	def asignar_identidad_nosis(self):
-		if self.nosis_vi_identificacion != False:
-			self.main_id_number = self.nosis_vi_identificacion
-		if self.nosis_vi_razonSocial != False:
-			self.name = self.nosis_vi_razonSocial
-		self.confirm()
 
 class FinancieraNosisInforme(models.Model):
 	_name = 'financiera.nosis.informe'
@@ -196,12 +10,10 @@ class FinancieraNosisInforme(models.Model):
 	# Validacion de identidad
 	nosis_vi_identificacion = fields.Char('Identificacion')
 	nosis_vi_razonSocial = fields.Char('Razon Social')
-
 	# Resultado
 	nosis_sco_vig = fields.Char('Scoring de Riesgo')
 	nosis_sco_12m = fields.Char('Scoring de Riesgo 12m')
 	nosis_cda = fields.Char('Criterio de Aceptacion')
-
 	nosis_ci_vig_peorSit = fields.Integer('Peor Situacion Bancaria')
 	nosis_ci_vig_total_cantBcos = fields.Integer('Cantidad de bancos y ent. fin. vigentes')
 	nosis_ci_vig_total_monto = fields.Integer('Monto en todos los bancos y ent. fin. vigentes')
@@ -217,16 +29,15 @@ class FinancieraNosisInforme(models.Model):
 	# CDA
 	nosis_cda_detalle = fields.Text('CDA Detalle')
 	nosis_cda_evaluado = fields.Integer('CDA evaluado')
+	# Nueva integracion
+	variable_ids = fields.One2many('financiera.nosis.informe.variable', 'informe_id', 'Variables')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.informe'))
 
-class ExtendsFinancieraPrestamoNosis(models.Model):
-	_name = 'financiera.prestamo'
-	_inherit = 'financiera.prestamo'
-
-	@api.one
-	def enviar_a_revision(self):
-		if len(self.company_id.nosis_configuracion_id) > 0:
-			nosis_configuracion_id = self.company_id.nosis_configuracion_id
-			if nosis_configuracion_id.solicitar_informe_enviar_a_revision:
-				self.partner_id.solicitar_informe_nosis()
-		super(ExtendsFinancieraPrestamoNosis, self).enviar_a_revision()
+class FinancieraNosisInformeVariable(models.Model):
+	_name = 'financiera.nosis.informe.variable'
+	
+	informe_id = fields.Many2one('financiera.nosis.informe', 'Informe')
+	name = fields.Char('Nombre')
+	valor = fields.Char('Valor')
+	fecha = fields.Date('Fecha')
+	

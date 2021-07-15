@@ -2,7 +2,7 @@
   <data>
 
     <!-- Lista de informes solicitados -->
-    <record model="ir.ui.view" id="financiera_nosis_tree">
+    <record model="ir.ui.view" id="financiera_nosis_informe_tree">
       <field name="name">financiera.nosis.informe.tree</field>
       <field name="model">financiera.nosis.informe</field>
       <field name="arch" type="xml">
@@ -24,11 +24,34 @@
       </field>
     </record>
 
+
+		<record id="financiera_nosis_informe_form" model="ir.ui.view">
+			<field name="name">financiera.nosis.informe.form</field>
+			<field name="model">financiera.nosis.informe</field>
+			<field name="arch" type="xml">
+				<form string="Informe" create="false" delete="false" edit="false">
+					<sheet>
+						<notebook>
+							<page string="Variables">
+								<field name="variable_ids">
+									<tree>
+										<field name="name"/>
+										<field name="valor"/>
+										<field name="fecha"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
     <record model="ir.actions.act_window" id="financiera_nosis_informe_action">
       <field name="name">Lista de informes solicitados</field>
       <field name="res_model">financiera.nosis.informe</field>
-      <field name="view_mode">tree</field>
-      <field name="view_id" ref="financiera_nosis_tree"/>
+      <field name="view_mode">tree,tree</field>
+      <field name="view_id" ref="financiera_nosis_informe_tree"/>
     </record>
 
     <!-- menu categories -->
@@ -36,176 +59,6 @@
     <menuitem name="Informes" id="menu_informes" sequence="10" parent="menu_nosis"/>
 
     <menuitem name="Informes" id="menu_informes_action" sequence="1" parent="menu_informes" action="financiera_nosis_informe_action"/>
-
-    <!-- Vista Form Partner Page Buro Nosis -->
-
-    <record id="partner_nosis_form_inherited"  model="ir.ui.view">
-      <field name="name">Extension Partner Nosis form</field>
-      <field name="model">res.partner</field>
-      <field name="inherit_id" ref="base.view_partner_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//page[3]" position='after'>
-          <page string='Nosis' groups="financiera_nosis.ver_informe">
-            <notebook>
-              <page string="Informes">
-                <field name="nosis_informe_ids">
-                  <tree>
-                    <field name="create_date" string="Fecha"/>
-                    <field name="nosis_vi_identificacion"/>
-                    <field name="nosis_vi_razonSocial"/>
-                    <field name="nosis_sco_vig"/>
-                    <field name="nosis_cda"/>
-                    <field name="nosis_cda_evaluado"/>
-                    <field name="nosis_ci_vig_peorSit"/>
-                    <field name="nosis_ci_vig_total_cantBcos"/>
-                    <field name="nosis_ci_vig_total_monto"/>
-                    <field name="nosis_ci_vig_sit1_monto"/>
-                    <field name="nosis_ci_vig_sit2_monto"/>
-                    <field name="nosis_ci_vig_sit3_monto"/>
-                    <field name="nosis_ci_vig_sit4_monto"/>
-                    <field name="nosis_ci_vig_sit5_monto"/>
-                    <field name="nosis_ci_vig_sit6_monto"/>
-                    <field name="nosis_ci_12m_sf_noPag_cant"/>
-                    <field name="nosis_ci_12m_sf_noPag_monto"/>
-                  </tree>
-                  <form>
-                    <group>
-                      <group>
-                        <field name="create_date" string="Fecha"/>
-                        <field name="nosis_vi_identificacion"/>
-                        <field name="nosis_vi_razonSocial"/>
-                        <field name="nosis_sco_vig"/>
-                        <field name="nosis_cda"/>
-                        <field name="nosis_cda_evaluado"/>
-                        <field name="nosis_ci_vig_peorSit"/>
-                        <field name="nosis_ci_vig_total_cantBcos"/>
-                        <field name="nosis_ci_vig_total_monto"/>
-                        <field name="nosis_ci_vig_sit1_monto"/>
-                        <field name="nosis_ci_vig_sit2_monto"/>
-                        <field name="nosis_ci_vig_sit3_monto"/>
-                        <field name="nosis_ci_vig_sit4_monto"/>
-                        <field name="nosis_ci_vig_sit5_monto"/>
-                        <field name="nosis_ci_vig_sit6_monto"/>
-                        <field name="nosis_ci_12m_sf_noPag_cant"/>
-                        <field name="nosis_ci_12m_sf_noPag_monto"/>
-                      </group>
-                      <group>
-                        <field name="nosis_cda_detalle" widget="html"/>
-                      </group>
-                    </group>
-                  </form>
-                </field>
-              </page>
-            </notebook>
-          </page>
-        </xpath>
-      </field>
-    </record>
-
-
-    <!-- Vista Form Partner Buro Nosis -->
-
-    <record id="partner_nosis_basic_form_inherited"  model="ir.ui.view">
-      <field name="name">Extension Partner Nosis form</field>
-      <field name="model">res.partner</field>
-      <field name="inherit_id" ref="financiera_prestamos.partner_form_inherited"/>
-      <field name="arch" type="xml">
-        <xpath expr="//group[@name='risk']" position="inside">
-          <group string="Nosis" col="1" style="background-color: #E6E6E6">
-            <group col="1" attrs="{'invisible': [('nosis_vi_identificacion', '=', False)]}">
-              <group col="1">
-                <field name="nosis_sco_vig" readonly="0"/>
-              </group>
-              <group col="2">
-                <group col="1">
-                  <field name="nosis_vi_razonSocial" readonly="1"/>
-                </group>
-                <group col="1">
-                  <field name="nosis_vi_identificacion" readonly="1"/>
-                </group>
-              </group>
-              <button name="asignar_identidad_nosis" string="Asignar identidad Nosis al Cliente" attrs="{'invisible': [('nosis_vi_identificacion', '=', False), ('nosis_vi_razonSocial', '=', False)]}" type="object" confirm="Desea confirmar?"/>
-              <group col="2">
-                <group col="1">
-                  <field name="nosis_cda_evaluado" readonly="1"/>
-                </group>
-                <group col="1">
-                  <field name="nosis_cda" readonly="1"/>
-                </group>
-              </group>
-              <group col="2">
-								<group col="1">
-									<field name="nosis_capacidad_pago_mensual" readonly="1"/>
-								</group>
-								<group col="1">
-									<field name="nosis_partner_tipo_id" readonly="1"/>
-								</group>
-							</group>
-              <group col="1">
-                <group col="1">
-                  <field name="nosis_ci_vig_total_monto"/>
-                </group>
-              </group>
-            </group>
-            <separate col="1"/>
-            <group col="2">
-              <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
-							<button name="asignar_cpm_y_tipo_cliente_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
-            </group>
-          </group>
-        </xpath>
-      </field>
-    </record>
-
-        <!-- Vista Form Riesgo Crediticio -->
-
-    <record id="financiera_res_partner_scoring_form_inherit"  model="ir.ui.view">
-      <field name="name">Extension Partner rol form</field>
-      <field name="model">res.partner</field>
-      <field name="inherit_id" ref="financiera_prestamos.financiera_res_partner_scoring_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//group[@name='risk']" position="after">
-          <group string="Nosis" col="1" style="background-color: #E6E6E6">
-            <group col="1" attrs="{'invisible': [('nosis_vi_identificacion', '=', False)]}">
-              <group col="1">
-                <group col="1">
-                  <field name="nosis_sco_vig" readonly="1"/>
-                </group>
-                <group col="2">
-                  <group col="1">
-                    <field name="nosis_vi_razonSocial" readonly="1"/>
-                  </group>
-                  <group col="1">
-                    <field name="nosis_vi_identificacion" readonly="1"/>
-                  </group>
-                </group>
-                <button name="asignar_identidad_nosis" string="Asignar identidad Nosis al Cliente" attrs="{'invisible': [('nosis_vi_identificacion', '=', False), ('nosis_vi_razonSocial', '=', False)]}" type="object" confirm="Desea confirmar?"/>
-                <group col="2">
-                  <group col="1">
-                    <field name="nosis_cda_evaluado" readonly="1"/>
-                  </group>
-                  <group col="1">
-                    <field name="nosis_cda" readonly="1"/>
-                  </group>
-                </group>
-                <group col="2">
-                  <group col="1">
-                    <field name="nosis_capacidad_pago_mensual" readonly="1"/>
-									</group>
-									<group col="1">
-										<field name="nosis_partner_tipo_id" readonly="1"/>
-									</group>
-                </group>
-              </group>
-            </group>
-            <separate col="1"/>
-            <group col="2">
-              <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
-            </group>
-          </group>
-        </xpath>
-      </field>
-    </record>
 
   </data>
 </openerp>

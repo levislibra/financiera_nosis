@@ -48,7 +48,7 @@
     <record model="ir.actions.act_window" id="financiera_var_nosis_otorgamientos_action">
       <field name="name">Variables Nosis y prestamos</field>
       <field name="res_model">financiera.prestamo</field>
-			<field name="domain">[('nosis_vi_identificacion','!=', False)]</field>
+			<field name="domain">[('nosis_vi_identificacion','!=', False), ('state','!=','cancelado')]</field>
       <field name="view_mode">tree</field>
       <field name="view_id" ref="financiera_var_nosis_otorgamientos_tree"/>
     </record>
