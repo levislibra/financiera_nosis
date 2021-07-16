@@ -30,6 +30,7 @@
         'views/extends_res_company.xml',
         'views/nosis_configuracion.xml',
         'views/nosis_informe.xml',
+				'views/nosis_cda.xml',
 				'views/extends_financiera_prestamo.xml',
 				'views/extends_res_partner.xml',
 				'data/ir_cron.xml',

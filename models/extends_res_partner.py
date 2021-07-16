@@ -64,10 +64,14 @@ class ExtendsResPartnerNosis(models.Model):
 				variable_valor = variable['Valor']
 				if 'FechaAct' in variable:
 					variable_fecha = variable['FechaAct']
+				variable_descripcion = variable['Descripcion']
+				variable_tipo = variable['Tipo']
 				variable_id = self.env['financiera.nosis.informe.variable'].create({
 					'name': variable_nombre,
 					'valor': variable_valor,
 					'fecha': variable_fecha,
+					'descripcion': variable_descripcion,
+					'tipo': variable_tipo,
 				})
 				nuevo_informe_id.variable_ids = [variable_id.id]
 

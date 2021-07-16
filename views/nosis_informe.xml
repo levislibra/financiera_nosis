@@ -9,16 +9,7 @@
         <tree create="false" delete="false" edit="false">
           <field name="create_date" string="Fecha"/>
           <field name="partner_id"/>
-          <field name="nosis_vi_identificacion"/>
-          <field name="nosis_vi_razonSocial"/>
-          <field name="nosis_sco_vig"/>
-          <field name="nosis_cda"/>
-          <field name="nosis_cda_evaluado"/>
-          <field name="nosis_ci_vig_peorSit"/>
-          <field name="nosis_ci_vig_total_cantBcos"/>
-          <field name="nosis_ci_vig_total_monto"/>
-          <field name="nosis_ci_12m_sf_noPag_cant"/>
-          <field name="nosis_ci_12m_sf_noPag_monto"/>
+          <field name="variable_ids"/>
           <field name="company_id" groups="base.group_erp_manager"/>
         </tree>
       </field>
@@ -31,15 +22,54 @@
 			<field name="arch" type="xml">
 				<form string="Informe" create="false" delete="false" edit="false">
 					<sheet>
+						<group>
+							<field name="partner_id"/>
+						</group>
 						<notebook>
 							<page string="Variables">
-								<field name="variable_ids">
-									<tree>
-										<field name="name"/>
-										<field name="valor"/>
-										<field name="fecha"/>
-									</tree>
-								</field>
+								<group>
+									<group>
+										<field name="variable_ids">
+											<tree>
+												<field name="fecha"/>
+												<field name="name"/>
+												<field name="valor"/>
+												<field name="descripcion"/>
+												<field name="tipo"/>
+											</tree>
+										</field>
+									</group>
+									<group>
+										<label string=' '/>
+										<button string="Ejecutar CDA" name="ejecutar_cdas" type="object" class="oe_highlight"/>
+										<field name="cda_resultado_ids">
+											<tree>
+												<field name="create_date" string="Fecha"/>
+												<field name="name"/>
+												<field name="regla_ids"/>
+												<!-- <field name="descripcion"/> -->
+												<!-- <field name="tipo"/> -->
+											</tree>
+											<form>
+												<sheet>
+													<group>
+														<field name="create_date" string="Fecha"/>
+														<field name="name"/>
+														<field name="regla_ids">
+															<tree>
+																<field name="variable"/>
+																<field name="operador"/>
+																<field name="valor"/>
+																<field name="informe_valor"/>
+																<field name="resultado"/>
+															</tree>
+														</field>
+													</group>
+												</sheet>
+											</form>
+										</field>
+									</group>
+								</group>
 							</page>
 						</notebook>
 					</sheet>
@@ -50,7 +80,7 @@
     <record model="ir.actions.act_window" id="financiera_nosis_informe_action">
       <field name="name">Lista de informes solicitados</field>
       <field name="res_model">financiera.nosis.informe</field>
-      <field name="view_mode">tree,tree</field>
+      <field name="view_mode">tree,form</field>
       <field name="view_id" ref="financiera_nosis_informe_tree"/>
     </record>
 

@@ -31,8 +31,19 @@ class FinancieraNosisInforme(models.Model):
 	nosis_cda_evaluado = fields.Integer('CDA evaluado')
 	# Nueva integracion
 	variable_ids = fields.One2many('financiera.nosis.informe.variable', 'informe_id', 'Variables')
+	cda_resultado_ids = fields.One2many('financiera.nosis.cda.resultado', 'informe_id', 'Resultados')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.informe'))
-
+	
+	@api.one
+	def ejecutar_cdas(self):
+		cda_obj = self.pool.get('financiera.nosis.cda')
+		cda_ids = cda_obj.search(self.env.cr, self.env.uid, [
+			('activo', '=', True),
+			('company_id', '=', self.company_id.id),
+		])
+		for _id in cda_ids:
+			cda_id = cda_obj.browse(self.env.cr, self.env.uid, _id)
+			cda_id.ejecutar(self.id)
 class FinancieraNosisInformeVariable(models.Model):
 	_name = 'financiera.nosis.informe.variable'
 	
@@ -40,4 +51,6 @@ class FinancieraNosisInformeVariable(models.Model):
 	name = fields.Char('Nombre')
 	valor = fields.Char('Valor')
 	fecha = fields.Date('Fecha')
+	descripcion = fields.Char('Descripcion')
+	tipo = fields.Char('Tipo')
 	

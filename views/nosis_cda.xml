@@ -1,0 +1,77 @@
+<openerp>
+  <data>
+
+    <!-- Lista de cdas -->
+    <record model="ir.ui.view" id="financiera_nosis_cda_tree">
+      <field name="name">financiera.nosis.cda.tree</field>
+      <field name="model">financiera.nosis.cda</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="create_date" string="Fecha"/>
+          <field name="name"/>
+					<field name="orden"/>
+          <field name="activo"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
+        </tree>
+      </field>
+    </record>
+
+
+		<record id="financiera_nosis_cda_form" model="ir.ui.view">
+			<field name="name">financiera.nosis.cda.form</field>
+			<field name="model">financiera.nosis.cda</field>
+			<field name="arch" type="xml">
+				<form string="CDA">
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="activo"/>
+							<field name="orden"/>
+						</group>
+						<notebook>
+							<page string="Reglas">
+								<group>
+									<group string="Reglas">
+										<div>
+											<field name="regla_ids">
+												<tree>
+													<field name="variable"/>
+													<field name="operador"/>
+													<field name="valor"/>
+												</tree>
+												<form>
+													<sheet>
+														<group>
+															<field name="variable"/>
+															<field name="operador"/>
+															<field name="valor"/>
+														</group>
+													</sheet>
+												</form>
+											</field>
+										</div>
+									</group>
+									<group string="Datos"></group>
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+    <record model="ir.actions.act_window" id="financiera_nosis_cda_action">
+      <field name="name">CDA</field>
+      <field name="res_model">financiera.nosis.cda</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="financiera_nosis_cda_tree"/>
+    </record>
+
+    <!-- menu categories -->
+    
+    <menuitem name="cdas" id="menu_cdas" sequence="20" parent="menu_nosis"/>
+
+    <menuitem name="cdas" id="menu_cdas_action" sequence="1" parent="menu_cdas" action="financiera_nosis_cda_action"/>
+
+  </data>
+</openerp>
