@@ -37,6 +37,7 @@ class ExtendsResPartnerNosis(models.Model):
 	# nosis CDA
 	nosis_cda_detalle = fields.Text('Nosis - CDA Detalle')
 	nosis_cda_evaluado = fields.Integer('Nosis - CDA evaluado')
+	nosis_variable_ids = fields.One2many('financiera.nosis.informe.variable', 'partner_id', 'Variables')
 	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
 	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Nosis - Tipo de cliente')
 
@@ -58,15 +59,18 @@ class ExtendsResPartnerNosis(models.Model):
 		else:
 			nuevo_informe_id = self.env['financiera.nosis.informe'].create({})
 			self.nosis_informe_ids = [nuevo_informe_id.id]
+			self.nosis_variable_ids = [(6, 0, [])]
 			for variable in data['Contenido']['Datos']['Variables']:
 				print("variable keys: ", variable.keys())
 				variable_nombre = variable['Nombre']
 				variable_valor = variable['Valor']
+				variable_fecha = None
 				if 'FechaAct' in variable:
 					variable_fecha = variable['FechaAct']
 				variable_descripcion = variable['Descripcion']
 				variable_tipo = variable['Tipo']
 				variable_id = self.env['financiera.nosis.informe.variable'].create({
+					'partner_id': self.id,
 					'name': variable_nombre,
 					'valor': variable_valor,
 					'fecha': variable_fecha,

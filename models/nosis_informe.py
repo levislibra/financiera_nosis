@@ -48,6 +48,7 @@ class FinancieraNosisInformeVariable(models.Model):
 	_name = 'financiera.nosis.informe.variable'
 	
 	informe_id = fields.Many2one('financiera.nosis.informe', 'Informe')
+	partner_id = fields.Many2one('res.partner', 'Cliente')
 	name = fields.Char('Nombre')
 	valor = fields.Char('Valor')
 	fecha = fields.Date('Fecha')

@@ -20,19 +20,24 @@ class FinancieraNosisCda(models.Model):
 			'name': self.name,
 			'informe_id': informe_id,
 		})
+		resultado = 'aprobado'
 		for regla_id in self.regla_ids:
 			regla_resultado_id = regla_id.copy()
 			regla_resultado_id.nosis_cda_id = None
 			regla_resultado_id.ejecutar(informe_id)
+			if regla_resultado_id.resultado == 'rechazado':
+				resultado = 'rechazado'
 			cda_resultado_id.regla_ids = [regla_resultado_id.id]
+		cda_resultado_id.resultado = resultado
 
 class FinancieraNosisCdaResultado(models.Model):
 	_name = 'financiera.nosis.cda.resultado'
 
-	order = 'id desc'
+	_order = 'id desc'
 	name = fields.Char('Nombre')
 	informe_id = fields.Many2one('financiera.nosis.informe', 'Informe')
 	regla_ids = fields.One2many('financiera.nosis.cda.regla', 'nosis_cda_resultado_id', 'Reglas')
+	resultado = fields.Selection([('rechazado', 'Rechazado'), ('aprobado', 'Aprobado')], 'Resultado')
 
 class FinancieraNosisCdaRegla(models.Model):
 	_name = 'financiera.nosis.cda.regla'
@@ -54,7 +59,8 @@ class FinancieraNosisCdaRegla(models.Model):
 	], 'Condicion')
 	valor = fields.Char('Valor')
 	informe_valor	= fields.Char('Valor informe')
-	resultado = fields.Char('Resultado', help='Aprobado o Rechazado')
+	resultado = fields.Selection([('rechazado', 'Rechazado'), ('aprobado', 'Aprobado')], 'Resultado')
+	detalle = fields.Char('Detalle')
 
 	@api.one
 	def ejecutar(self, informe_id):
@@ -68,11 +74,68 @@ class FinancieraNosisCdaRegla(models.Model):
 			self.informe_valor = variable_id.valor
 			if self.operador == 'contiene':
 				if self.valor.upper() in variable_id.valor.upper():
-					self.resultado = 'Aprobado'
+					self.resultado = 'aprobado'
 				else:
-					self.resultado = 'Rechazado'
-			if self.operador == 'no_contiene':
+					self.resultado = 'rechazado'
+			elif self.operador == 'no_contiene':
 				if self.valor.upper() not in variable_id.valor.upper():
-					self.resultado = 'Aprobado'
+					self.resultado = 'aprobado'
 				else:
-					self.resultado = 'Rechazado'
+					self.resultado = 'rechazado'
+			elif self.operador == 'es_igual_a':
+				if self.valor.upper() == variable_id.valor.upper():
+					self.resultado = 'aprobado'
+				else:
+					self.resultado = 'rechazado'
+			elif self.operador == 'no_es_igual_a':
+				if self.valor.upper() != variable_id.valor.upper():
+					self.resultado = 'aprobado'
+				else:
+					self.resultado = 'rechazado'
+			elif self.operador == 'esta_establecida':
+				if variable_id.valor:
+					self.resultado = 'aprobado'
+				else:
+					self.resultado = 'rechazado'
+			elif self.operador == 'no_esta_establecida':
+				if not variable_id.valor:
+					self.resultado = 'aprobado'
+				else:
+					self.resultado = 'rechazado'
+			elif self.operador == 'mayor_que':
+				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
+					if variable_id.valor > self.valor:
+						self.resultado = 'aprobado'
+					else:
+						self.resultado = 'rechazado'
+				else:
+					self.resultado = 'rechazado'
+					self.detalle = 'Algun valor no es Int.'
+			elif self.operador == 'menor_que':
+				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
+					if variable_id.valor < self.valor:
+						self.resultado = 'aprobado'
+					else:
+						self.resultado = 'rechazado'
+				else:
+					self.resultado = 'rechazado'
+					self.detalle = 'Algun valor no es Int.'
+			elif self.operador == 'mayor_o_igual_que':
+				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
+					if variable_id.valor >= self.valor:
+						self.resultado = 'aprobado'
+					else:
+						self.resultado = 'rechazado'
+				else:
+					self.resultado = 'rechazado'
+					self.detalle = 'Algun valor no es Int.'
+			elif self.operador == 'menor_o_igual_que':
+				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
+					if variable_id.valor <= self.valor:
+						self.resultado = 'aprobado'
+					else:
+						self.resultado = 'rechazado'
+				else:
+					self.resultado = 'rechazado'
+					self.detalle = 'Algun valor no es Int.'
+

@@ -44,10 +44,11 @@
 										<button string="Ejecutar CDA" name="ejecutar_cdas" type="object" class="oe_highlight"/>
 										<field name="cda_resultado_ids">
 											<tree>
+												<field name="id"/>
 												<field name="create_date" string="Fecha"/>
 												<field name="name"/>
 												<field name="regla_ids"/>
-												<!-- <field name="descripcion"/> -->
+												<field name="resultado"/>
 												<!-- <field name="tipo"/> -->
 											</tree>
 											<form>
@@ -55,6 +56,7 @@
 													<group>
 														<field name="create_date" string="Fecha"/>
 														<field name="name"/>
+														<field name="resultado"/>
 														<field name="regla_ids">
 															<tree>
 																<field name="variable"/>
@@ -62,6 +64,7 @@
 																<field name="valor"/>
 																<field name="informe_valor"/>
 																<field name="resultado"/>
+																<field name="detalle"/>
 															</tree>
 														</field>
 													</group>
