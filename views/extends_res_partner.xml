@@ -52,7 +52,7 @@
             <separate col="1"/>
             <group col="2">
               <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
-							<button name="asignar_cpm_y_tipo_cliente_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
+							<button name="ejecutar_cdas_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
             </group>
           </group>
         </xpath>

@@ -30,6 +30,11 @@
 						</group>
 						<notebook>
 							<page string="Reglas">
+								<group string="Otorgar">
+									<field name="otorgar_cpm_base"/>
+									<field name="otorgar_cpm_maximo"/>
+									<field name="otorgar_partner_tipo_id"/>
+								</group>
 								<group>
 									<group string="Reglas">
 										<div>
@@ -38,6 +43,9 @@
 													<field name="variable"/>
 													<field name="operador"/>
 													<field name="valor"/>
+													<field name="cpm_multiplicar"/>
+													<field name="cpm_sumar"/>
+													<field name="cpm_multiplicar_valor"/>
 												</tree>
 												<form>
 													<sheet>
@@ -45,6 +53,9 @@
 															<field name="variable"/>
 															<field name="operador"/>
 															<field name="valor"/>
+															<field name="cpm_multiplicar"/>
+															<field name="cpm_sumar"/>
+															<field name="cpm_multiplicar_valor"/>
 														</group>
 													</sheet>
 												</form>
@@ -69,7 +80,7 @@
 
     <!-- menu categories -->
     
-    <menuitem name="cdas" id="menu_cdas" sequence="20" parent="menu_nosis"/>
+    <menuitem name="cdas" id="menu_cdas" sequence="18" parent="menu_nosis"/>
 
     <menuitem name="cdas" id="menu_cdas_action" sequence="1" parent="menu_cdas" action="financiera_nosis_cda_action"/>
 

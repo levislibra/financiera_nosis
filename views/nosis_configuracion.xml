@@ -79,7 +79,7 @@
     
     <!-- menu categories -->
     
-    <menuitem name="Configuracion" id="menu_config" sequence="20" parent="menu_nosis"/>
+    <menuitem name="Configuracion" id="menu_config" sequence="30" parent="menu_nosis"/>
 
     <menuitem name="Configuracion" id="menu_config_action" sequence="1" parent="menu_config" action="financiera_nosis_action"/>
 

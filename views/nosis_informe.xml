@@ -21,6 +21,9 @@
 			<field name="model">financiera.nosis.informe</field>
 			<field name="arch" type="xml">
 				<form string="Informe" create="false" delete="false" edit="false">
+					<header>
+						<button string="Ejecutar CDA" name="ejecutar_cdas" type="object" class="oe_highlight"/>
+					</header>
 					<sheet>
 						<group>
 							<field name="partner_id"/>
@@ -29,48 +32,63 @@
 							<page string="Variables">
 								<group>
 									<group>
-										<field name="variable_ids">
-											<tree>
-												<field name="fecha"/>
-												<field name="name"/>
-												<field name="valor"/>
-												<field name="descripcion"/>
-												<field name="tipo"/>
-											</tree>
-										</field>
+										<div>
+											<field name="variable_ids">
+												<tree>
+													<field name="fecha"/>
+													<field name="name"/>
+													<field name="valor"/>
+													<field name="descripcion"/>
+													<field name="tipo"/>
+												</tree>
+											</field>
+										</div>
 									</group>
 									<group>
-										<label string=' '/>
-										<button string="Ejecutar CDA" name="ejecutar_cdas" type="object" class="oe_highlight"/>
-										<field name="cda_resultado_ids">
-											<tree>
-												<field name="id"/>
-												<field name="create_date" string="Fecha"/>
-												<field name="name"/>
-												<field name="regla_ids"/>
-												<field name="resultado"/>
-												<!-- <field name="tipo"/> -->
-											</tree>
-											<form>
-												<sheet>
-													<group>
-														<field name="create_date" string="Fecha"/>
-														<field name="name"/>
-														<field name="resultado"/>
-														<field name="regla_ids">
-															<tree>
-																<field name="variable"/>
-																<field name="operador"/>
-																<field name="valor"/>
-																<field name="informe_valor"/>
-																<field name="resultado"/>
-																<field name="detalle"/>
-															</tree>
-														</field>
-													</group>
-												</sheet>
-											</form>
-										</field>
+										<div>
+											<field name="cda_resultado_ids">
+												<tree>
+													<field name="id"/>
+													<field name="create_date" string="Fecha"/>
+													<field name="name"/>
+													<field name="regla_ids"/>
+													<field name="otorgar_cpm"/>
+													<field name="otorgar_partner_tipo_id"/>
+													<field name="resultado"/>
+												</tree>
+												<form>
+													<sheet>
+														<script>
+															$(document).ready(function(){
+																$('.modal-dialog').css({'width': '86%', 'height': '97%'});
+																$('.modal-content').css({'height': '100%'});
+																$('.modal-body').css({'height': '100%'});
+															});
+														</script>
+														<group>
+															<field name="create_date" string="Fecha"/>
+															<field name="name"/>
+															<field name="resultado"/>
+															<field name="otorgar_cpm"/>
+															<field name="otorgar_partner_tipo_id"/>
+															<field name="regla_ids">
+																<tree>
+																	<field name="variable"/>
+																	<field name="operador"/>
+																	<field name="valor"/>
+																	<field name="informe_valor"/>
+																	<field name="resultado"/>
+																	<field name="detalle"/>
+																	<field name="cpm_multiplicar"/>
+																	<field name="cpm_sumar"/>
+																	<field name="cpm_multiplicar_valor"/>
+																</tree>
+															</field>
+														</group>
+													</sheet>
+												</form>
+											</field>
+										</div>
 									</group>
 								</group>
 							</page>

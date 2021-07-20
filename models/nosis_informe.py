@@ -43,7 +43,13 @@ class FinancieraNosisInforme(models.Model):
 		])
 		for _id in cda_ids:
 			cda_id = cda_obj.browse(self.env.cr, self.env.uid, _id)
-			cda_id.ejecutar(self.id)
+			ret = cda_id.ejecutar(self.id)
+			if ret['resultado'] == 'aprobado':
+				self.partner_id.nosis_capacidad_pago_mensual = ret['cpm']
+				self.partner_id.capacidad_pago_mensual = ret['cpm']
+				self.partner_id.nosis_partner_tipo_id = ret['partner_tipo_id']
+				self.partner_id.partner_tipo_id = ret['partner_tipo_id']
+				break
 class FinancieraNosisInformeVariable(models.Model):
 	_name = 'financiera.nosis.informe.variable'
 	

@@ -11,7 +11,6 @@ class ExtendsResPartnerNosis(models.Model):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
 
-	nosis_informe_ids = fields.One2many('financiera.nosis.informe', 'partner_id', 'Nosis - Informes')
 	# Validacion de identidad
 	nosis_vi_identificacion = fields.Char('Nosis - Identificacion')
 	nosis_vi_razonSocial = fields.Char('Nosis - Razon Social')
@@ -37,6 +36,9 @@ class ExtendsResPartnerNosis(models.Model):
 	# nosis CDA
 	nosis_cda_detalle = fields.Text('Nosis - CDA Detalle')
 	nosis_cda_evaluado = fields.Integer('Nosis - CDA evaluado')
+	
+	# Nueva integracion NOSIS
+	nosis_informe_ids = fields.One2many('financiera.nosis.informe', 'partner_id', 'Nosis - Informes')
 	nosis_variable_ids = fields.One2many('financiera.nosis.informe.variable', 'partner_id', 'Variables')
 	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
 	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Nosis - Tipo de cliente')
@@ -61,7 +63,6 @@ class ExtendsResPartnerNosis(models.Model):
 			self.nosis_informe_ids = [nuevo_informe_id.id]
 			self.nosis_variable_ids = [(6, 0, [])]
 			for variable in data['Contenido']['Datos']['Variables']:
-				print("variable keys: ", variable.keys())
 				variable_nombre = variable['Nombre']
 				variable_valor = variable['Valor']
 				variable_fecha = None
@@ -80,32 +81,37 @@ class ExtendsResPartnerNosis(models.Model):
 				nuevo_informe_id.variable_ids = [variable_id.id]
 
 	@api.one
-	def asignar_cpm_y_tipo_cliente_nosis(self):
-		nosis_configuracion_id = self.company_id.nosis_configuracion_id
-		self.capacidad_pago_mensual = 0
-		self.partner_tipo_id = None
-		for line in nosis_configuracion_id.score_ids:
-			if self.nosis_vi_identificacion and self.nosis_sco_vig:
-				score = int(self.nosis_sco_vig)
-				cda_check = line.cda_resultado == 'no_controlar'
-				cda_check = cda_check or (line.cda_resultado == 'aprobado' and self.nosis_cda == 'Aprobado')
-				cda_check = cda_check or (line.cda_resultado == 'aprobado_bueno' and (self.nosis_cda == 'Aprobado' or self.nosis_cda == 'Bueno'))
-				if cda_check:
-					score_inicial_check = line.score_inicial == -1 or score >= line.score_inicial
-					score_final_check = line.score_final == -1 or score <= line.score_final
-					score_check = score_inicial_check and score_final_check
-					if score_check:
-						monto_deuda_inicial_check = line.nosis_ci_vig_total_monto_inicial == -1 or self.nosis_ci_vig_total_monto >= line.nosis_ci_vig_total_monto_inicial
-						monto_deuda_final_check = line.nosis_ci_vig_total_monto_final == -1 or self.nosis_ci_vig_total_monto <= line.nosis_ci_vig_total_monto_final
-						monto_deuda_check = monto_deuda_inicial_check and monto_deuda_final_check
-						if monto_deuda_check:
-							if nosis_configuracion_id.asignar_capacidad_pago_mensual:
-								self.nosis_capacidad_pago_mensual = line.capacidad_pago_mensual
-								self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
-							if nosis_configuracion_id.asignar_partner_tipo:
-								self.nosis_partner_tipo_id = line.partner_tipo_id.id
-								self.partner_tipo_id = self.nosis_partner_tipo_id.id
-							break
+	def ejecutar_cdas_nosis(self):
+		if self.nosis_informe_ids and len(self.nosis_informe_ids) > 0:
+			self.nosis_informe_ids[0].ejecutar_cdas()
+
+	# @api.one
+	# def asignar_cpm_y_tipo_cliente_nosis(self):
+	# 	nosis_configuracion_id = self.company_id.nosis_configuracion_id
+	# 	self.capacidad_pago_mensual = 0
+	# 	self.partner_tipo_id = None
+	# 	for line in nosis_configuracion_id.score_ids:
+	# 		if self.nosis_vi_identificacion and self.nosis_sco_vig:
+	# 			score = int(self.nosis_sco_vig)
+	# 			cda_check = line.cda_resultado == 'no_controlar'
+	# 			cda_check = cda_check or (line.cda_resultado == 'aprobado' and self.nosis_cda == 'Aprobado')
+	# 			cda_check = cda_check or (line.cda_resultado == 'aprobado_bueno' and (self.nosis_cda == 'Aprobado' or self.nosis_cda == 'Bueno'))
+	# 			if cda_check:
+	# 				score_inicial_check = line.score_inicial == -1 or score >= line.score_inicial
+	# 				score_final_check = line.score_final == -1 or score <= line.score_final
+	# 				score_check = score_inicial_check and score_final_check
+	# 				if score_check:
+	# 					monto_deuda_inicial_check = line.nosis_ci_vig_total_monto_inicial == -1 or self.nosis_ci_vig_total_monto >= line.nosis_ci_vig_total_monto_inicial
+	# 					monto_deuda_final_check = line.nosis_ci_vig_total_monto_final == -1 or self.nosis_ci_vig_total_monto <= line.nosis_ci_vig_total_monto_final
+	# 					monto_deuda_check = monto_deuda_inicial_check and monto_deuda_final_check
+	# 					if monto_deuda_check:
+	# 						if nosis_configuracion_id.asignar_capacidad_pago_mensual:
+	# 							self.nosis_capacidad_pago_mensual = line.capacidad_pago_mensual
+	# 							self.capacidad_pago_mensual = self.nosis_capacidad_pago_mensual
+	# 						if nosis_configuracion_id.asignar_partner_tipo:
+	# 							self.nosis_partner_tipo_id = line.partner_tipo_id.id
+	# 							self.partner_tipo_id = self.nosis_partner_tipo_id.id
+	# 						break
 
 	@api.one
 	def button_solicitar_informe_nosis(self):
