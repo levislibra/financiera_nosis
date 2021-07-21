@@ -62,6 +62,17 @@ class ExtendsResPartnerNosis(models.Model):
 			nuevo_informe_id = self.env['financiera.nosis.informe'].create({})
 			self.nosis_informe_ids = [nuevo_informe_id.id]
 			self.nosis_variable_ids = [(6, 0, [])]
+			direccion = []
+			direccion_variables = []
+			if nosis_configuracion_id.asignar_direccion_cliente:
+				if nosis_configuracion_id.asignar_calle_cliente_variable:
+					direccion_variables.append(nosis_configuracion_id.asignar_calle_cliente_variable)
+				if nosis_configuracion_id.asignar_nro_cliente_variable:
+					direccion_variables.append(nosis_configuracion_id.asignar_nro_cliente_variable)
+				if nosis_configuracion_id.asignar_piso_cliente_variable:
+					direccion_variables.append(nosis_configuracion_id.asignar_piso_cliente_variable)
+				if nosis_configuracion_id.asignar_departamento_cliente_variable:
+					direccion_variables.append(nosis_configuracion_id.asignar_departamento_cliente_variable)
 			for variable in data['Contenido']['Datos']['Variables']:
 				variable_nombre = variable['Nombre']
 				variable_valor = variable['Valor']
@@ -79,6 +90,46 @@ class ExtendsResPartnerNosis(models.Model):
 					'tipo': variable_tipo,
 				})
 				nuevo_informe_id.variable_ids = [variable_id.id]
+				if nosis_configuracion_id.asignar_nombre_cliente:
+					if variable_nombre == nosis_configuracion_id.asignar_nombre_cliente_variable:
+						self.name = variable_valor
+				if nosis_configuracion_id.asignar_direccion_cliente:
+					if variable_nombre in direccion_variables:
+						direccion.append(variable_valor)
+				if nosis_configuracion_id.asignar_ciudad_cliente:
+					if variable_nombre == nosis_configuracion_id.asignar_ciudad_cliente_variable:
+						self.city = variable_valor
+				if nosis_configuracion_id.asignar_cp_cliente:
+					if variable_nombre == nosis_configuracion_id.asignar_cp_cliente_variable:
+						self.zip = variable_valor
+				if nosis_configuracion_id.asignar_provincia_cliente:
+					if variable_nombre == nosis_configuracion_id.asignar_provincia_cliente_variable:
+						self.set_provincia(variable_valor)
+				if nosis_configuracion_id.asignar_identificacion_cliente:
+					if variable_nombre == nosis_configuracion_id.asignar_identificacion_cliente_variable:
+						self.main_id_number = variable_valor
+				if nosis_configuracion_id.asignar_genero_cliente:
+					if variable_nombre == nosis_configuracion_id.asignar_genero_cliente_variable:
+						if variable_valor == 'M':
+							self.sexo = 'masculino'
+						elif variable_valor == 'F':
+							self.sexo = 'femenino'
+			if nosis_configuracion_id.asignar_direccion_cliente:
+				if len(direccion) > 0:
+					self.street = ' '.join(direccion)
+
+	@api.one
+	def set_provincia(self, provincia):
+		if provincia == 'Capital Federal':
+			provincia = 'Ciudad Autónoma de Buenos Aires'
+		state_obj = self.pool.get('res.country.state')
+		state_ids = state_obj.search(self.env.cr, self.env.uid, [
+			('name', '=ilike', provincia)
+		])
+		if len(state_ids) > 0:
+			self.state_id = state_ids[0]
+			country_id = state_obj.browse(self.env.cr, self.env.uid, state_ids[0]).country_id
+			self.country_id = country_id.id
 
 	@api.one
 	def ejecutar_cdas_nosis(self):

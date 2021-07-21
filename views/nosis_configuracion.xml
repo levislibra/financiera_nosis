@@ -37,6 +37,29 @@
 												<!-- <field name="asginar_solo_cda_aprobado"/> -->
 												<field name="solicitar_informe_enviar_a_revision"/>
 												<field name="vr"/>
+												<field name="asignar_nombre_cliente"/>
+												<field name="asignar_nombre_cliente_variable" attrs="{'invisible': [('asignar_nombre_cliente','=',False)]}"/>
+												
+												<field name="asignar_direccion_cliente"/>
+												<field name="asignar_calle_cliente_variable" attrs="{'invisible': [('asignar_direccion_cliente','=',False)]}"/>
+												<field name="asignar_nro_cliente_variable" attrs="{'invisible': [('asignar_direccion_cliente','=',False)]}"/>
+												<field name="asignar_piso_cliente_variable" attrs="{'invisible': [('asignar_direccion_cliente','=',False)]}"/>
+												<field name="asignar_departamento_cliente_variable" attrs="{'invisible': [('asignar_direccion_cliente','=',False)]}"/>
+												
+												<field name="asignar_ciudad_cliente"/>
+												<field name="asignar_ciudad_cliente_variable" attrs="{'invisible': [('asignar_ciudad_cliente','=',False)]}"/>
+												
+												<field name="asignar_cp_cliente"/>
+												<field name="asignar_cp_cliente_variable" attrs="{'invisible': [('asignar_cp_cliente','=',False)]}"/>
+												
+												<field name="asignar_provincia_cliente"/>
+												<field name="asignar_provincia_cliente_variable" attrs="{'invisible': [('asignar_provincia_cliente','=',False)]}"/>
+
+												<field name="asignar_identificacion_cliente"/>
+												<field name="asignar_identificacion_cliente_variable" attrs="{'invisible': [('asignar_identificacion_cliente','=',False)]}"/>
+
+												<field name="asignar_genero_cliente"/>
+												<field name="asignar_genero_cliente_variable" attrs="{'invisible': [('asignar_genero_cliente','=',False)]}"/>
                       </group>
                     </group>
 										<notebook>
