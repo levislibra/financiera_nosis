@@ -105,11 +105,38 @@
       <field name="view_id" ref="financiera_nosis_informe_tree"/>
     </record>
 
+
+		<!-- Variables obtenidas -->
+
+		<record model="ir.ui.view" id="financiera_nosis_informe_variable_tree">
+      <field name="name">financiera.nosis.informe.variable.tree</field>
+      <field name="model">financiera.nosis.informe.variable</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false" edit="false">
+          <field name="create_date" string="Fecha"/>
+          <field name="partner_id"/>
+					<field name="informe_id"/>
+          <field name="descripcion"/>
+					<field name="valor"/>
+					<field name="name"/>
+          <field name="company_id" groups="base.group_erp_manager"/>
+        </tree>
+      </field>
+    </record>
+
+		<record model="ir.actions.act_window" id="financiera_nosis_informe_variable_action">
+      <field name="name">Lista de variables por informes</field>
+      <field name="res_model">financiera.nosis.informe.variable</field>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="financiera_nosis_informe_variable_tree"/>
+    </record>
+
     <!-- menu categories -->
     
     <menuitem name="Informes" id="menu_informes" sequence="10" parent="menu_nosis"/>
 
     <menuitem name="Informes" id="menu_informes_action" sequence="1" parent="menu_informes" action="financiera_nosis_informe_action"/>
+		<menuitem name="Variables" id="menu_informes_variable_action" sequence="10" parent="menu_informes" action="financiera_nosis_informe_variable_action"/>
 
   </data>
 </openerp>

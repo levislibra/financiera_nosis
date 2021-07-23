@@ -60,4 +60,5 @@ class FinancieraNosisInformeVariable(models.Model):
 	fecha = fields.Date('Fecha')
 	descripcion = fields.Char('Descripcion')
 	tipo = fields.Char('Tipo')
+	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.informe'))
 	
