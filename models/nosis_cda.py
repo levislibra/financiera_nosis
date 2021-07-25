@@ -27,8 +27,6 @@ class FinancieraNosisCda(models.Model):
 			'otorgar_cpm_maximo': self.otorgar_cpm_maximo,
 			'otorgar_partner_tipo_id': self.otorgar_partner_tipo_id.id,
 		})
-		print("cda_resultado.otorgar_cpm: ", cda_resultado_id.otorgar_cpm)
-		print("cda_resultado.otorgar_partner_tipo_id.name: ", cda_resultado_id.otorgar_partner_tipo_id.name)
 		resultado = 'aprobado'
 		for regla_id in self.regla_ids:
 			regla_resultado_id = regla_id.copy()
@@ -90,7 +88,6 @@ class FinancieraNosisCdaRegla(models.Model):
 
 	@api.multi
 	def ejecutar(self, informe_id):
-		print("Ejecutar regla")
 		self.ensure_one()
 		variable_obj = self.pool.get('financiera.nosis.informe.variable')
 		variable_ids = variable_obj.search(self.env.cr, self.env.uid, [
@@ -167,15 +164,7 @@ class FinancieraNosisCdaRegla(models.Model):
 					self.resultado = 'rechazado'
 					self.detalle = 'Algun valor no es Int.'
 			if self.resultado == 'aprobado':
-				print('resultado es aprobado')
-				print('Base: ', self.nosis_cda_resultado_id.otorgar_cpm)
-				print('Multiplicar por: ', self.cpm_multiplicar)
 				self.nosis_cda_resultado_id.otorgar_cpm *= self.cpm_multiplicar
-				print('Base: ', self.nosis_cda_resultado_id.otorgar_cpm)
-				print('Sumar: ', self.cpm_sumar)
 				self.nosis_cda_resultado_id.otorgar_cpm += self.cpm_sumar
 				if variable_id.valor and variable_id.valor.isdigit():
-					print('Base: ', self.nosis_cda_resultado_id.otorgar_cpm)
-					print('Valor: ', variable_id.valor)
-					print('multi valor y sumar: ', self.cpm_multiplicar_valor)
 					self.nosis_cda_resultado_id.otorgar_cpm += int(variable_id.valor) * self.cpm_multiplicar_valor
