@@ -6,6 +6,7 @@ class FinancieraNosisInforme(models.Model):
 	_name = 'financiera.nosis.informe'
 	
 	_order = 'create_date desc'
+	name = fields.Char('Nombre')
 	partner_id = fields.Many2one('res.partner', 'Cliente')
 	# Validacion de identidad
 	nosis_vi_identificacion = fields.Char('Identificacion')
@@ -34,6 +35,15 @@ class FinancieraNosisInforme(models.Model):
 	cda_resultado_ids = fields.One2many('financiera.nosis.cda.resultado', 'informe_id', 'Resultados')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.informe'))
 	
+	@api.model
+	def create(self, values):
+		rec = super(FinancieraNosisInforme, self).create(values)
+		id_informe = self.env.user.company_id.nosis_configuracion_id.id_informe
+		rec.update({
+			'name': 'NOSIS/INFORME/' + str(id_informe).zfill(8),
+		})
+		return rec
+
 	@api.one
 	def ejecutar_cdas(self):
 		cda_obj = self.pool.get('financiera.nosis.cda')
@@ -41,6 +51,11 @@ class FinancieraNosisInforme(models.Model):
 			('activo', '=', True),
 			('company_id', '=', self.company_id.id),
 		])
+		if len(cda_ids) > 0:
+			self.partner_id.nosis_capacidad_pago_mensual = 0
+			self.partner_id.capacidad_pago_mensual = 0
+			self.partner_id.nosis_partner_tipo_id = None
+			self.partner_id.partner_tipo_id = None
 		for _id in cda_ids:
 			cda_id = cda_obj.browse(self.env.cr, self.env.uid, _id)
 			ret = cda_id.ejecutar(self.id)

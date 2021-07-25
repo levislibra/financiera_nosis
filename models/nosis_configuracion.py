@@ -16,9 +16,8 @@ class FinancieraNosisConfiguracion(models.Model):
 	usuario = fields.Char('Usuario')
 	token = fields.Char('Token')
 	
-	asignar_capacidad_pago_mensual = fields.Boolean('Asignar capacidad de pago mensual automaticamente')
-	asignar_partner_tipo = fields.Boolean('Asignar tipo de cliente automaticamente')
-	asginar_solo_cda_aprobado = fields.Boolean('Asignar CPM o Tipo de cliente solo a CDA aprobado')
+	id_informe = fields.Integer('Id proximo informe', default=1)
+	ejecutar_cda_al_solicitar_informe = fields.Boolean('Ejecutar CDAs al solicitar informe')
 	solicitar_informe_enviar_a_revision = fields.Boolean('Solicitar informe al enviar a revision')
 	vr = fields.Integer('Grupo de variables')
 	asignar_nombre_cliente = fields.Boolean('Asignar Nombre al cliente')

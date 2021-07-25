@@ -32,11 +32,13 @@
                         <field name="token" password="True"/>
                       </group>
                       <group>
-												<field name="asignar_capacidad_pago_mensual"/>
-												<field name="asignar_partner_tipo"/>
-												<!-- <field name="asginar_solo_cda_aprobado"/> -->
+												<field name="ejecutar_cda_al_solicitar_informe"/>
 												<field name="solicitar_informe_enviar_a_revision"/>
 												<field name="vr"/>
+                      </group>
+                    </group>
+										<group>
+											<group>
 												<field name="asignar_nombre_cliente"/>
 												<field name="asignar_nombre_cliente_variable" attrs="{'invisible': [('asignar_nombre_cliente','=',False)]}"/>
 												
@@ -60,29 +62,9 @@
 
 												<field name="asignar_genero_cliente"/>
 												<field name="asignar_genero_cliente_variable" attrs="{'invisible': [('asignar_genero_cliente','=',False)]}"/>
-                      </group>
-                    </group>
-										<notebook>
-											<page string="Asignacion CPM y Tipo de Cliente segun CDA">
-												<group col="1">
-													<field name="fecha_desde"/>
-													<button name="actualizar_cda_partners" string="Actualizar clientes segun CDA's" type="object" />
-												</group>
-												<field name="score_ids">
-													<tree editable="true">
-														<field name="orden"/>
-														<field name="cda_resultado" required="1"/>
-														<field name="score_inicial"/>
-														<field name="score_final"/>
-														<field name="nosis_ci_vig_total_monto_inicial"/>
-														<field name="nosis_ci_vig_total_monto_final"/>
-														<field name="capacidad_pago_mensual"/>
-														<field name="partner_tipo_id"/>
-														<field name="company_id" groups="base.group_erp_manager"/>
-													</tree>
-												</field>
-											</page>
-										</notebook>
+											</group>
+											<group></group>
+										</group>
                 </sheet>
             </form>
         </field>
