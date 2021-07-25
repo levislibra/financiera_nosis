@@ -44,8 +44,6 @@ class FinancieraNosisConfiguracion(models.Model):
 	asignar_genero_cliente = fields.Boolean('Asignar genero al cliente')
 	asignar_genero_cliente_variable = fields.Char('Variable para genero', default='VI_Sexo')
 
-	score_ids = fields.One2many('financiera.nosis.score', 'configuracion_id', 'Asignacion de CPM segun CDA')
-	fecha_desde = fields.Date("Actualizar informes desde")
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.configuracion'))
 	
 	@api.one
