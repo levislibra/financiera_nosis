@@ -74,9 +74,9 @@
 															<field name="regla_ids">
 																<tree>
 																	<field name="variable"/>
+																	<field name="informe_valor"/>
 																	<field name="operador"/>
 																	<field name="valor"/>
-																	<field name="informe_valor"/>
 																	<field name="resultado"/>
 																	<field name="detalle"/>
 																	<field name="cpm_multiplicar"/>

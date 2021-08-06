@@ -129,7 +129,7 @@ class FinancieraNosisCdaRegla(models.Model):
 					self.resultado = 'rechazado'
 			elif self.operador == 'mayor_que':
 				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
-					if variable_id.valor > self.valor:
+					if int(variable_id.valor) > int(self.valor):
 						self.resultado = 'aprobado'
 					else:
 						self.resultado = 'rechazado'
@@ -138,7 +138,7 @@ class FinancieraNosisCdaRegla(models.Model):
 					self.detalle = 'Algun valor no es Int.'
 			elif self.operador == 'menor_que':
 				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
-					if variable_id.valor < self.valor:
+					if int(variable_id.valor) < int(self.valor):
 						self.resultado = 'aprobado'
 					else:
 						self.resultado = 'rechazado'
@@ -147,7 +147,7 @@ class FinancieraNosisCdaRegla(models.Model):
 					self.detalle = 'Algun valor no es Int.'
 			elif self.operador == 'mayor_o_igual_que':
 				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
-					if variable_id.valor >= self.valor:
+					if int(variable_id.valor) >= int(self.valor):
 						self.resultado = 'aprobado'
 					else:
 						self.resultado = 'rechazado'
@@ -156,7 +156,7 @@ class FinancieraNosisCdaRegla(models.Model):
 					self.detalle = 'Algun valor no es Int.'
 			elif self.operador == 'menor_o_igual_que':
 				if self.valor and self.valor.isdigit() and variable_id.valor and variable_id.valor.isdigit():
-					if variable_id.valor <= self.valor:
+					if int(variable_id.valor) <= int(self.valor):
 						self.resultado = 'aprobado'
 					else:
 						self.resultado = 'rechazado'
