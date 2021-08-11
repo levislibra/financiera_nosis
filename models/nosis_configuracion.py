@@ -17,9 +17,11 @@ class FinancieraNosisConfiguracion(models.Model):
 	token = fields.Char('Token')
 	
 	id_informe = fields.Integer('Id proximo informe', default=1)
+	id_cuestionario = fields.Integer('Id proximo cuestionario', default=1)
 	ejecutar_cda_al_solicitar_informe = fields.Boolean('Ejecutar CDAs al solicitar informe')
 	solicitar_informe_enviar_a_revision = fields.Boolean('Solicitar informe al enviar a revision')
 	vr = fields.Integer('Grupo de variables')
+	nro_grupo_vid = fields.Integer('Grupo VID')
 	asignar_nombre_cliente = fields.Boolean('Asignar Nombre al cliente')
 	asignar_nombre_cliente_variable = fields.Char('Variable para el Nombre', default='VI_RazonSocial')
 	

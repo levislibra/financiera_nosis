@@ -2,11 +2,10 @@
 
 from openerp import models, fields, api
 from openerp.exceptions import UserError, ValidationError
-import time
 import requests
 
-ENDPOINT_NOSIS = 'https://ws01.nosis.com/rest/variables'
-
+ENDPOINT_NOSIS_VAR = 'https://ws01.nosis.com/rest/variables'
+ENDPOINT_NOSIS_VID = 'https://ws02.nosis.com/rest/validacion'
 class ExtendsResPartnerNosis(models.Model):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
@@ -38,6 +37,9 @@ class ExtendsResPartnerNosis(models.Model):
 	nosis_variable_ids = fields.One2many('financiera.nosis.informe.variable', 'partner_id', 'Variables')
 	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
 	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Nosis - Tipo de cliente')
+	# Validacion por cuestionario
+	nosis_cuestionario_ids = fields.One2many('financiera.nosis.cuestionario', 'partner_id', 'Nosis - Cuestionarios')
+	nosis_cuestionario_id = fields.Many2one('financiera.nosis.cuestionario', 'Nosis - Cuestionario actual')
 
 	@api.one
 	def solicitar_informe_nosis(self):
@@ -49,7 +51,7 @@ class ExtendsResPartnerNosis(models.Model):
 			'vr': nosis_configuracion_id.vr,
 			'format': 'json',
 		}
-		response = requests.get(ENDPOINT_NOSIS, params)
+		response = requests.get(ENDPOINT_NOSIS_VAR, params)
 		data = response.json()
 		if response.status_code != 200:
 			raise ValidationError("Error en la consulta de informe Nosis: "+data['Contenido']['Resultado']['Novedad'])
@@ -137,4 +139,47 @@ class ExtendsResPartnerNosis(models.Model):
 	@api.one
 	def button_solicitar_informe_nosis(self):
 		self.solicitar_informe_nosis()
+
+	# funcion de API
+	@api.one
+	def obtener_cuestionario_nosis(self):
+		nosis_configuracion_id = self.company_id.nosis_configuracion_id
+		params = {
+			'usuario': nosis_configuracion_id.usuario,
+			'token': nosis_configuracion_id.token,
+			'NroGrupoVID': nosis_configuracion_id.nro_grupo_vid,
+			'documento': self.main_id_number,
+			'format': 'json',
+		}
+		response = requests.get(ENDPOINT_NOSIS_VID, params)
+		data = response.json()
+		if response.status_code != 200:
+			raise ValidationError("Error en la obtencion del cuestionario Nosis: "+data['Contenido']['Resultado']['Novedad'])
+		else:
+			nuevo_cuestionario_id = self.env['financiera.nosis.cuestionario'].create({})
+			nosis_configuracion_id.id_cuestionario += 1
+			self.nosis_cuestionario_ids = [nuevo_cuestionario_id.id]
+			self.nosis_cuestionario_id = nuevo_cuestionario_id.id
+			nuevo_cuestionario_id.id_consulta = data['Contenido']['Datos']['IdConsulta']
+			for desafio in data['Contenido']['Datos']['Cuestionario']['Desafios']:
+				if 'Pregunta' in desafio:
+					pregunta = desafio['Pregunta']
+					pregunta_id = self.env['financiera.nosis.cuestionario.pregunta'].create({
+						'id_pregunta': pregunta['IdPregunta'],
+						'texto': pregunta['Texto'],
+					})
+					nuevo_cuestionario_id.pregunta_ids = [pregunta_id.id]
+					i = 0
+					for opcion in pregunta['Opciones']:
+						opcion_id = self.env['financiera.nosis.cuestionario.pregunta.opcion'].create({
+							'id_opcion': i,
+							'texto': opcion,
+						})
+						i += 1
+						pregunta_id.opcion_ids = [opcion_id.id]
+
+	@api.one
+	def button_obtener_cuestionario_nosis(self):
+		self.obtener_cuestionario_nosis()
+
 

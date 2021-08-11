@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Pregunta wizard -->
+
+    <record id="nosis_pregunta_wizard" model="ir.ui.view">
+      <field name="name">Desafio</field>
+      <field name="model">financiera.nosis.pregunta.wizard</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group col="1">
+							<div>
+								<field name="texto" readonly="1"/>
+								<field name="opcion_ids">
+									<tree create='false' edita='false' delete='false'>
+										<!-- <field name="id_opcion"/> -->
+										<field name="texto"/>
+										<button string="Correcta" name="set_opcion_correcta" type="object"/>
+										<field name="respuesta"/>
+									</tree>
+								</field>
+								<field name="id_respuesta" invisible="1"/>
+							</div>
+            </group>
+          </sheet>
+          <footer>
+            <button name="siguiente_pregunta" string="Siguente pregunta" type="object" class="btn-primary"/>
+            <button string="Cerrar" class="btn-default" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+    
+</odoo>

@@ -35,6 +35,7 @@
 												<field name="ejecutar_cda_al_solicitar_informe"/>
 												<field name="solicitar_informe_enviar_a_revision"/>
 												<field name="vr"/>
+												<field name="nro_grupo_vid"/>
                       </group>
                     </group>
 										<group>

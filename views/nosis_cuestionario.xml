@@ -1,0 +1,118 @@
+<openerp>
+  <data>
+
+		<!-- Cuestionario -->
+
+		<record id="nosis_cuestionario_tree"  model="ir.ui.view">
+			<field name="name">financiera.nosis.cuestionario.tree</field>
+			<field name="model">financiera.nosis.cuestionario</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="create_date" string="Fecha"/>
+					<field name="partner_id"/>
+					<field name="name"/>
+					<field name="pregunta_ids" options="{'reload_on_button': true}"/>
+					<field name="porcentaje"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="nosis_cuestionario_form"  model="ir.ui.view">
+			<field name="name">financiera.nosis.cuestionario.form</field>
+			<field name="model">financiera.nosis.cuestionario</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button string="Siguiente pregunta" name="button_wizard_siguiente_pregunta" states='pendiente' type="object" class="oe_highlight"/>
+						<button string="Evaluar" name="button_evaluar_cuestionario_nosis" states='pendiente' type="object" class="oe_highlight"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group>
+							<field name="create_date" string="Fecha"/>
+							<field name="partner_id" readonly="1"/>
+							<field name="name" readonly="1"/>
+							<field name="id_consulta" readonly="1"/>
+							<field name="pregunta_ids" options="{'reload_on_button': true}" states='aprobado,rechazado' readonly="1"/>
+							<field name="cuestionario"/>
+							<label string="Porcetaje de respuesta correctas" states='aprobado,rechazado'/>
+							<h1 states='aprobado,rechazado'><field name="porcentaje" readonly="1"/></h1>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Pregunta -->
+
+		<record id="nosis_cuestionario_pregunta_tree"  model="ir.ui.view">
+			<field name="name">financiera.nosis.cuestionario.pregunta.tree</field>
+			<field name="model">financiera.nosis.cuestionario.pregunta</field>
+			<field name="arch" type="xml">
+				<tree>
+					<!-- <field name="id_pregunta"/> -->
+					<field name="texto"/>
+					<field name="id_respuesta"/>
+					<field name="opcion_ids" options="{'reload_on_button': true}"/>
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="nosis_cuestionario_pregunta_form"  model="ir.ui.view">
+			<field name="name">financiera.nosis.cuestionario.pregunta.form</field>
+			<field name="model">financiera.nosis.cuestionario.pregunta</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="texto"/>
+							<field name="opcion_ids" options="{'reload_on_button': true}"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="nosis_cuestionario_pregunta_action">
+      <field name="name">Pregunta</field>
+      <field name="res_model">financiera.nosis.cuestionario.pregunta</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="nosis_cuestionario_pregunta_tree"/>
+    </record>
+
+
+		<!-- Opciones -->
+
+		<record id="nosis_cuestionario_pregunta_opcion_tree"  model="ir.ui.view">
+			<field name="name">financiera.nosis.cuestionario.pregunta.opcion.tree</field>
+			<field name="model">financiera.nosis.cuestionario.pregunta.opcion</field>
+			<field name="arch" type="xml">
+				<tree>
+					<!-- <field name="id_opcion"/> -->
+					<field name="texto"/>
+					<field name="respuesta"/>
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="nosis_cuestionario_pregunta_opcion_form"  model="ir.ui.view">
+			<field name="name">financiera.nosis.cuestionario.pregunta.opcion.form</field>
+			<field name="model">financiera.nosis.cuestionario.pregunta.opcion</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group col="1">
+							<field name="texto"/>
+							<button string="Correcta" name="set_opcion_correcta" type="object"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+  </data>
+</openerp>

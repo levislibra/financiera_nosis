@@ -12,12 +12,25 @@
           <page string='Nosis' groups="financiera_nosis.ver_informe">
             <notebook>
               <page string="Informes">
-                <field name="nosis_informe_ids">
-                  <tree>
-										<field name="create_date" string="Fecha"/>
-                    <field name="variable_ids"/>
-                  </tree>
-                </field>
+								<group>
+									<group col="1">
+										<field name="nosis_informe_ids">
+											<tree>
+												<field name="create_date" string="Fecha"/>
+												<field name="variable_ids"/>
+											</tree>
+										</field>
+									</group>
+									<group col="1">
+										<field name="nosis_cuestionario_ids">
+											<tree>
+												<field name="create_date" string="Fecha"/>
+												<field name="name"/>
+												<field name="pregunta_ids"/>
+											</tree>
+										</field>
+									</group>
+								</group>
               </page>
             </notebook>
           </page>
@@ -53,6 +66,11 @@
             <group col="2">
               <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
 							<button name="ejecutar_cdas_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
+            </group>
+						<separate col="1"/>
+						<group col="1">
+              <button name="button_obtener_cuestionario_nosis" string="Obtener cuestionario" type="object" confirm="Desea obtener el cuestionario?" groups="financiera_nosis.solicitar_informe"/>
+							<field name='nosis_cuestionario_id'/>
             </group>
           </group>
         </xpath>

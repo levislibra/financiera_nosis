@@ -32,6 +32,8 @@
         'views/nosis_informe.xml',
 				'views/nosis_cda.xml',
 				'views/extends_res_partner.xml',
+				'views/nosis_cuestionario.xml',
+				'wizards/nosis_pregunta_wizard.xml',
 				'data/ir_cron.xml',
     ],
     # only loaded in demonstration mode
