@@ -1,33 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <!-- <data noupdate="0"> -->
-        <record id="nosis_config_rule" model="ir.rule">
-            <field name="name">Nosis Configuracion multi-company</field>
-            <field name="model_id" ref="model_financiera_nosis_configuracion"/>
-            <field eval="True" name="global"/>
-            <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
-        </record>
+	<!-- <data noupdate="0"> -->
+		<record id="nosis_config_rule" model="ir.rule">
+			<field name="name">Nosis Configuracion multi-company</field>
+			<field name="model_id" ref="model_financiera_nosis_configuracion"/>
+			<field eval="True" name="global"/>
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
 
-        <record id="nosis_informe_rule" model="ir.rule">
-            <field name="name">Nosis Informe multi-company</field>
-            <field name="model_id" ref="model_financiera_nosis_informe"/>
-            <field eval="True" name="global"/>
-            <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
-        </record>
+		<record id="nosis_informe_rule" model="ir.rule">
+			<field name="name">Nosis Informe multi-company</field>
+			<field name="model_id" ref="model_financiera_nosis_informe"/>
+			<field eval="True" name="global"/>
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
 
-				<record id="nosis_informe_variable_rule" model="ir.rule">
-					<field name="name">Nosis Informe Variable multi-company</field>
-					<field name="model_id" ref="model_financiera_nosis_informe_variable"/>
-					<field eval="True" name="global"/>
-					<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
-				</record>
+		<record id="nosis_informe_variable_rule" model="ir.rule">
+			<field name="name">Nosis Informe Variable multi-company</field>
+			<field name="model_id" ref="model_financiera_nosis_informe_variable"/>
+			<field eval="True" name="global"/>
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
 
-				<record id="nosis_cda_rule" model="ir.rule">
-					<field name="name">Nosis CDA multi-company</field>
-					<field name="model_id" ref="model_financiera_nosis_cda"/>
-					<field eval="True" name="global"/>
-					<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
-			</record>
+		<record id="nosis_cda_rule" model="ir.rule">
+			<field name="name">Nosis CDA multi-company</field>
+			<field name="model_id" ref="model_financiera_nosis_cda"/>
+			<field eval="True" name="global"/>
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
 
-    <!-- </data>  -->
+		<record id="nosis_cuestionario_rule" model="ir.rule">
+			<field name="name">Nosis Cuestionario multi-company</field>
+			<field name="model_id" ref="model_financiera_nosis_cuestionario"/>
+			<field eval="True" name="global"/>
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+
+		<record id="nosis_cuestionario_pregunta_rule" model="ir.rule">
+			<field name="name">Nosis Pregunta multi-company</field>
+			<field name="model_id" ref="model_financiera_nosis_cuestionario_pregunta"/>
+			<field eval="True" name="global"/>
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+
+		<record id="nosis_cuestionario_pregunta_opcion_rule" model="ir.rule">
+			<field name="name">Nosis Pregunta Opcion multi-company</field>
+			<field name="model_id" ref="model_financiera_nosis_cuestionario_pregunta_opcion"/>
+			<field eval="True" name="global"/>
+			<field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+		</record>
+
+	<!-- </data>  -->
 </openerp>

@@ -156,6 +156,8 @@ class ExtendsResPartnerNosis(models.Model):
 		if response.status_code != 200:
 			raise ValidationError("Error en la obtencion del cuestionario Nosis: "+data['Contenido']['Resultado']['Novedad'])
 		else:
+			if data['Contenido']['Resultado']['Estado'] != 200:
+				raise ValidationError("Nosis: " + data['Contenido']['Resultado']['Novedad'])
 			nuevo_cuestionario_id = self.env['financiera.nosis.cuestionario'].create({})
 			nosis_configuracion_id.id_cuestionario += 1
 			self.nosis_cuestionario_ids = [nuevo_cuestionario_id.id]
