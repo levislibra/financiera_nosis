@@ -141,8 +141,9 @@ class ExtendsResPartnerNosis(models.Model):
 		self.solicitar_informe_nosis()
 
 	# funcion de API
-	@api.one
+	# @api.one
 	def obtener_cuestionario_nosis(self):
+		desafios = None
 		nosis_configuracion_id = self.company_id.nosis_configuracion_id
 		params = {
 			'usuario': nosis_configuracion_id.usuario,
@@ -163,7 +164,8 @@ class ExtendsResPartnerNosis(models.Model):
 			self.nosis_cuestionario_ids = [nuevo_cuestionario_id.id]
 			self.nosis_cuestionario_id = nuevo_cuestionario_id.id
 			nuevo_cuestionario_id.id_consulta = data['Contenido']['Datos']['IdConsulta']
-			for desafio in data['Contenido']['Datos']['Cuestionario']['Desafios']:
+			desafios = data['Contenido']['Datos']['Cuestionario']['Desafios']
+			for desafio in desafios:
 				if 'Pregunta' in desafio:
 					pregunta = desafio['Pregunta']
 					pregunta_id = self.env['financiera.nosis.cuestionario.pregunta'].create({
@@ -179,6 +181,7 @@ class ExtendsResPartnerNosis(models.Model):
 						})
 						i += 1
 						pregunta_id.opcion_ids = [opcion_id.id]
+		return desafios
 
 	@api.one
 	def button_obtener_cuestionario_nosis(self):

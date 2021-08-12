@@ -39,6 +39,18 @@ class FinancieraNosisCuestionario(models.Model):
 					cuestionario += ',' + str(pregunta.id_pregunta) + '-' + str(pregunta.id_respuesta)
 		self.cuestionario = cuestionario
 
+	def set_respuestas(self, cuestionario):
+		if not (cuestionario and len(cuestionario.split(',')) == len(self.pregunta_ids)):
+			raise ValidationError('Parece que no se respondio a todas las preguntas.')
+		for respuesta in cuestionario.split(','):
+			respuesta = respuesta.split('-')
+			id_pregunta = respuesta[0]
+			id_respuesta = respuesta[1]
+			for pregunta_id in self.pregunta_ids:
+				if pregunta_id.id_pregunta == id_pregunta:
+					pregunta_id.opcion_ids(id_respuesta).set_opcion_correcta()
+					break
+
 	def evaluar_cuestionario_nosis(self, confirm_partner=False, validar_partner=False):
 		if not (self.cuestionario and len(self.cuestionario.split(',')) == len(self.pregunta_ids)):
 			raise ValidationError('Parece que no se respondio a todas las preguntas.')
