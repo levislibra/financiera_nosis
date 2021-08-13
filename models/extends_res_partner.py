@@ -157,7 +157,6 @@ class ExtendsResPartnerNosis(models.Model):
 		else:
 			if data['Contenido']['Resultado']['Estado'] != 200:
 				raise ValidationError("Nosis: " + data['Contenido']['Resultado']['Novedad'])
-			ret = True
 			nuevo_cuestionario_id = self.env['financiera.nosis.cuestionario'].create({})
 			nosis_configuracion_id.id_cuestionario += 1
 			self.nosis_cuestionario_ids = [nuevo_cuestionario_id.id]
@@ -180,6 +179,7 @@ class ExtendsResPartnerNosis(models.Model):
 						})
 						i += 1
 						pregunta_id.opcion_ids = [opcion_id.id]
+			ret = nuevo_cuestionario_id.id
 		return ret
 
 	@api.one
