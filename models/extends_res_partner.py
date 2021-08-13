@@ -140,10 +140,8 @@ class ExtendsResPartnerNosis(models.Model):
 	def button_solicitar_informe_nosis(self):
 		self.solicitar_informe_nosis()
 
-	# funcion de API
-	# @api.one
 	def obtener_cuestionario_nosis(self):
-		desafios = None
+		ret = False
 		nosis_configuracion_id = self.company_id.nosis_configuracion_id
 		params = {
 			'usuario': nosis_configuracion_id.usuario,
@@ -159,6 +157,7 @@ class ExtendsResPartnerNosis(models.Model):
 		else:
 			if data['Contenido']['Resultado']['Estado'] != 200:
 				raise ValidationError("Nosis: " + data['Contenido']['Resultado']['Novedad'])
+			ret = True
 			nuevo_cuestionario_id = self.env['financiera.nosis.cuestionario'].create({})
 			nosis_configuracion_id.id_cuestionario += 1
 			self.nosis_cuestionario_ids = [nuevo_cuestionario_id.id]
@@ -181,7 +180,7 @@ class ExtendsResPartnerNosis(models.Model):
 						})
 						i += 1
 						pregunta_id.opcion_ids = [opcion_id.id]
-		return desafios
+		return ret
 
 	@api.one
 	def button_obtener_cuestionario_nosis(self):

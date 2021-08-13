@@ -16,7 +16,7 @@
 									<tree create='false' edita='false' delete='false'>
 										<!-- <field name="id_opcion"/> -->
 										<field name="texto"/>
-										<button string="Correcta" name="set_opcion_correcta" type="object"/>
+										<button string="Correcta" name="wizard_set_opcion_correcta" type="object"/>
 										<field name="respuesta"/>
 									</tree>
 								</field>

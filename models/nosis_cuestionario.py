@@ -14,6 +14,7 @@ class FinancieraNosisCuestionario(models.Model):
 	id_consulta = fields.Char('ID consulta')
 	indice_consulta_actual = fields.Integer('Indice consulta actual')
 	pregunta_ids = fields.One2many('financiera.nosis.cuestionario.pregunta', 'cuestionario_id', 'Preguntas')
+	respuestas_test = fields.Char('Respuestas test')
 	cuestionario = fields.Char('Respuestas', compute='_compute_cuestionario')
 	state = fields.Selection([('pendiente', 'Pendiente'), ('rechazado', 'Rechazado'), ('aprobado', 'Aprobado')], string='Estado', default='pendiente')
 	porcentaje = fields.Integer('Porcentaje')
@@ -39,17 +40,55 @@ class FinancieraNosisCuestionario(models.Model):
 					cuestionario += ',' + str(pregunta.id_pregunta) + '-' + str(pregunta.id_respuesta)
 		self.cuestionario = cuestionario
 
+	def get_cuestionario_to_dict(self):
+		cuestionario_dict = {
+			'id': self.id,
+			'indice_consulta_actual': self.indice_consulta_actual,
+			'cuestionario': self.cuestionario,
+			'state': self.state,
+			'porcentaje': self.porcentaje,
+		}
+		pregunta_list_dict = []
+		for pregunta_id in self.pregunta_ids:
+			pregunta_dict = {
+				'id_pregunta': pregunta_id.id_pregunta,
+				'id_respuesta': pregunta_id.id_respuesta,
+				'texto': pregunta_id.texto,
+			}
+			opcion_list_dict = []
+			for opcion_id in pregunta_id.opcion_ids:
+				opcion_dict = {
+					'id_opcion': opcion_id.id_opcion,
+					'texto': opcion_id.texto,
+					'respuesta': opcion_id.respuesta,
+				}
+				opcion_list_dict.append(opcion_dict)
+			pregunta_dict['opcion_ids'] = opcion_list_dict
+			pregunta_list_dict.append(pregunta_dict)
+		cuestionario_dict['pregunta_ids'] = pregunta_list_dict
+		return cuestionario_dict
+	
+	@api.one
+	def button_get_cuestionario_to_dict(self):
+		self.get_cuestionario_to_dict()
+
+	@api.one
 	def set_respuestas(self, cuestionario):
 		if not (cuestionario and len(cuestionario.split(',')) == len(self.pregunta_ids)):
 			raise ValidationError('Parece que no se respondio a todas las preguntas.')
 		for respuesta in cuestionario.split(','):
 			respuesta = respuesta.split('-')
-			id_pregunta = respuesta[0]
-			id_respuesta = respuesta[1]
+			id_pregunta = int(respuesta[0])
+			id_respuesta = int(respuesta[1])
 			for pregunta_id in self.pregunta_ids:
 				if pregunta_id.id_pregunta == id_pregunta:
-					pregunta_id.opcion_ids(id_respuesta).set_opcion_correcta()
+					opcion_id = pregunta_id.opcion_ids[id_respuesta]
+					opcion_id.set_opcion_correcta()
 					break
+
+	@api.one
+	def button_set_respuestas(self):
+		self.set_respuestas(self.respuestas_test)
 
 	def evaluar_cuestionario_nosis(self, confirm_partner=False, validar_partner=False):
 		if not (self.cuestionario and len(self.cuestionario.split(',')) == len(self.pregunta_ids)):
@@ -67,6 +106,8 @@ class FinancieraNosisCuestionario(models.Model):
 		if response.status_code != 200:
 			raise ValidationError("Error en la obtencion del cuestionario Nosis: "+data['Contenido']['Resultado']['Novedad'])
 		else:
+			if data['Contenido']['Resultado']['Estado'] != 200:
+				raise ValidationError("Nosis: " + data['Contenido']['Resultado']['Novedad'])
 			if self.state == 'pendiente':
 				self.porcentaje = data['Contenido']['Datos']['Cuestionario']['Porcentaje']
 			self.state = data['Contenido']['Datos']['Cuestionario']['Estado'].lower()
@@ -119,11 +160,15 @@ class FinancieraNosisCuestionarioPreguntaOpcion(models.Model):
 	texto = fields.Char('Texto')
 	respuesta = fields.Boolean('Respuesta')
 	company_id = fields.Many2one('res.company', 'Empresa', required=False, default=lambda self: self.env['res.company']._company_default_get('financiera.nosis.cuestionario.pregunta.opcion'))
-	
-	@api.multi
+
+	@api.one
 	def set_opcion_correcta(self):
 		if self.pregunta_id.id_respuesta >= 0:
 			self.pregunta_id.opcion_ids[self.pregunta_id.id_respuesta].respuesta = False
 		self.respuesta = True
 		self.pregunta_id.id_respuesta = self.id_opcion
+
+	@api.multi
+	def wizard_set_opcion_correcta(self):
+		self.set_opcion_correcta()
 		return self.pregunta_id.cuestionario_id.button_wizard_siguiente_pregunta()

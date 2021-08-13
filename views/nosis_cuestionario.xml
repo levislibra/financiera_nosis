@@ -27,6 +27,7 @@
 					<header>
 						<button string="Siguiente pregunta" name="button_wizard_siguiente_pregunta" states='pendiente' type="object" class="oe_highlight"/>
 						<button string="Evaluar" name="button_evaluar_cuestionario_nosis" states='pendiente' type="object" class="oe_highlight"/>
+						<!-- <button string="Test Print dict" name="button_get_cuestionario_to_dict" type="object" class="oe_highlight"/> -->
 						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
@@ -34,7 +35,8 @@
 							<field name="create_date" string="Fecha"/>
 							<field name="partner_id" readonly="1"/>
 							<field name="name" readonly="1"/>
-							<field name="id_consulta" readonly="1"/>
+							<!-- <field name="respuestas_test"/> -->
+							<field name="id_consulta" invisible="1"/>
 							<field name="pregunta_ids" options="{'reload_on_button': true}" states='aprobado,rechazado' readonly="1"/>
 							<field name="cuestionario"/>
 							<label string="Porcetaje de respuesta correctas" states='aprobado,rechazado'/>
@@ -52,7 +54,7 @@
 			<field name="model">financiera.nosis.cuestionario.pregunta</field>
 			<field name="arch" type="xml">
 				<tree>
-					<!-- <field name="id_pregunta"/> -->
+					<field name="id_pregunta"/>
 					<field name="texto"/>
 					<field name="id_respuesta"/>
 					<field name="opcion_ids" options="{'reload_on_button': true}"/>
@@ -107,7 +109,7 @@
 					<sheet>
 						<group col="1">
 							<field name="texto"/>
-							<button string="Correcta" name="set_opcion_correcta" type="object"/>
+							<field name="respuesta"/>
 						</group>
 					</sheet>
 				</form>
