@@ -146,7 +146,7 @@ class ExtendsResPartnerNosis(models.Model):
 		ret = False
 		nosis_configuracion_id = self.company_id.nosis_configuracion_id
 		grupoVid = nosis_configuracion_id.nro_grupo_vid
-		if (self.nosis_cuestionario_id) > 0:
+		if len(self.nosis_cuestionario_id) > 0:
 			grupoVid = nosis_configuracion_id.nro_grupo_vid2
 		params = {
 			'usuario': nosis_configuracion_id.usuario,
