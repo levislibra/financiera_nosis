@@ -70,6 +70,7 @@ class ExtendsResPartnerNosis(models.Model):
 					direccion_variables.append(nosis_configuracion_id.asignar_piso_cliente_variable)
 				if nosis_configuracion_id.asignar_departamento_cliente_variable:
 					direccion_variables.append(nosis_configuracion_id.asignar_departamento_cliente_variable)
+			list_values = []
 			for variable in data['Contenido']['Datos']['Variables']:
 				variable_nombre = variable['Nombre']
 				variable_valor = variable['Valor']
@@ -78,15 +79,15 @@ class ExtendsResPartnerNosis(models.Model):
 					variable_fecha = variable['FechaAct']
 				variable_descripcion = variable['Descripcion']
 				variable_tipo = variable['Tipo']
-				variable_id = self.env['financiera.nosis.informe.variable'].create({
+				variable_values = {
 					'partner_id': self.id,
 					'name': variable_nombre,
 					'valor': variable_valor,
 					'fecha': variable_fecha,
 					'descripcion': variable_descripcion,
 					'tipo': variable_tipo,
-				})
-				nuevo_informe_id.variable_ids = [variable_id.id]
+				}
+				list_values.append((0,0, variable_values))
 				if nosis_configuracion_id.asignar_nombre_cliente:
 					if variable_nombre == nosis_configuracion_id.asignar_nombre_cliente_variable:
 						self.name = variable_valor
@@ -111,6 +112,7 @@ class ExtendsResPartnerNosis(models.Model):
 							self.sexo = 'masculino'
 						elif variable_valor == 'F':
 							self.sexo = 'femenino'
+			nuevo_informe_id.write({'variable_ids': list_values})
 			if nosis_configuracion_id.asignar_direccion_cliente:
 				if len(direccion) > 0:
 					self.street = ' '.join(direccion)
@@ -143,10 +145,13 @@ class ExtendsResPartnerNosis(models.Model):
 	def obtener_cuestionario_nosis(self):
 		ret = False
 		nosis_configuracion_id = self.company_id.nosis_configuracion_id
+		grupoVid = nosis_configuracion_id.nro_grupo_vid
+		if (self.nosis_cuestionario_id) > 0:
+			grupoVid = nosis_configuracion_id.nro_grupo_vid2
 		params = {
 			'usuario': nosis_configuracion_id.usuario,
 			'token': nosis_configuracion_id.token,
-			'NroGrupoVID': nosis_configuracion_id.nro_grupo_vid,
+			'NroGrupoVID': grupoVid,
 			'documento': self.main_id_number,
 			'format': 'json',
 		}

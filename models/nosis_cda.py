@@ -33,7 +33,7 @@ class FinancieraNosisCda(models.Model):
 			regla_resultado_id.nosis_cda_id = None
 			regla_resultado_id.nosis_cda_resultado_id = cda_resultado_id.id
 			regla_resultado_id.ejecutar(informe_id)
-			if regla_resultado_id.resultado == 'rechazado':
+			if not regla_resultado_id.no_rechazar and regla_resultado_id.resultado == 'rechazado':
 				resultado = 'rechazado'
 			cda_resultado_id.regla_ids = [regla_resultado_id.id]
 		cda_resultado_id.resultado = resultado
@@ -78,6 +78,7 @@ class FinancieraNosisCdaRegla(models.Model):
 		('menor_o_igual_que', 'menor o igual que')
 	], 'Condicion')
 	valor = fields.Char('Valor')
+	no_rechazar = fields.Boolean('No rechazar Regla')
 	cpm_multiplicar = fields.Float('CPM - Multiplicar base por', default=1.00)
 	cpm_sumar = fields.Float('CPM - Sumar base')
 	cpm_multiplicar_valor = fields.Float('CPM - Multiplicar valor por y sumar a base', default=0.00)

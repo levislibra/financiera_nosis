@@ -43,6 +43,7 @@
 													<field name="variable"/>
 													<field name="operador"/>
 													<field name="valor"/>
+													<field name="no_rechazar"/>
 													<field name="cpm_multiplicar"/>
 													<field name="cpm_sumar"/>
 													<field name="cpm_multiplicar_valor"/>
@@ -53,6 +54,7 @@
 															<field name="variable"/>
 															<field name="operador"/>
 															<field name="valor"/>
+															<field name="no_rechazar"/>
 															<field name="cpm_multiplicar"/>
 															<field name="cpm_sumar"/>
 															<field name="cpm_multiplicar_valor"/>

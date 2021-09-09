@@ -22,6 +22,7 @@ class FinancieraNosisConfiguracion(models.Model):
 	solicitar_informe_enviar_a_revision = fields.Boolean('Solicitar informe al enviar a revision')
 	vr = fields.Integer('Grupo de variables')
 	nro_grupo_vid = fields.Integer('Grupo VID')
+	nro_grupo_vid2 = fields.Integer('Grupo VID 2do intento')
 	asignar_nombre_cliente = fields.Boolean('Asignar Nombre al cliente')
 	asignar_nombre_cliente_variable = fields.Char('Variable para el Nombre', default='VI_RazonSocial')
 	
