@@ -40,7 +40,7 @@
                       </group>
                     </group>
 										<group>
-											<group>
+											<group string="Asignar al perfil del cliente">
 												<field name="asignar_nombre_cliente"/>
 												<field name="asignar_nombre_cliente_variable" attrs="{'invisible': [('asignar_nombre_cliente','=',False)]}"/>
 												
@@ -65,7 +65,13 @@
 												<field name="asignar_genero_cliente"/>
 												<field name="asignar_genero_cliente_variable" attrs="{'invisible': [('asignar_genero_cliente','=',False)]}"/>
 											</group>
-											<group></group>
+											<group string="Variables principales">
+												<field name="nosis_variable_1"/>
+												<field name="nosis_variable_2"/>
+												<field name="nosis_variable_3"/>
+												<field name="nosis_variable_4"/>
+												<field name="nosis_variable_5"/>
+											</group>
 										</group>
                 </sheet>
             </form>

@@ -35,6 +35,11 @@ class ExtendsResPartnerNosis(models.Model):
 	# Nueva integracion NOSIS
 	nosis_informe_ids = fields.One2many('financiera.nosis.informe', 'partner_id', 'Nosis - Informes')
 	nosis_variable_ids = fields.One2many('financiera.nosis.informe.variable', 'partner_id', 'Variables')
+	nosis_variable_1 = fields.Char('Variable 1')
+	nosis_variable_2 = fields.Char('Variable 2')
+	nosis_variable_3 = fields.Char('Variable 3')
+	nosis_variable_4 = fields.Char('Variable 4')
+	nosis_variable_5 = fields.Char('Variable 5')
 	nosis_capacidad_pago_mensual = fields.Float('Nosis - CPM', digits=(16,2))
 	nosis_partner_tipo_id = fields.Many2one('financiera.partner.tipo', 'Nosis - Tipo de cliente')
 	# Validacion por cuestionario
@@ -113,12 +118,40 @@ class ExtendsResPartnerNosis(models.Model):
 						elif variable_valor == 'F':
 							self.sexo = 'femenino'
 			nuevo_informe_id.write({'variable_ids': list_values})
+			self.asignar_variables()
 			if nosis_configuracion_id.asignar_direccion_cliente:
 				if len(direccion) > 0:
 					self.street = ' '.join(direccion)
 			nosis_configuracion_id.id_informe += 1
 			if nosis_configuracion_id.ejecutar_cda_al_solicitar_informe:
 				nuevo_informe_id.ejecutar_cdas()
+
+	@api.one
+	def asignar_variables(self):
+		variable_1 = False
+		variable_2 = False
+		variable_3 = False
+		variable_4 = False
+		variable_5 = False
+		nosis_configuracion_id = self.company_id.nosis_configuracion_id
+		for var_id in self.nosis_variable_ids:
+			if var_id.name == nosis_configuracion_id.nosis_variable_1:
+				variable_1 = var_id.name + ": " + str(var_id.valor)
+			if var_id.name == nosis_configuracion_id.nosis_variable_2:
+				variable_2 = var_id.name + ": " + str(var_id.valor)
+			if var_id.name == nosis_configuracion_id.nosis_variable_3:
+				variable_3 = var_id.name + ": " + str(var_id.valor)
+			if var_id.name == nosis_configuracion_id.nosis_variable_4:
+				variable_4 = var_id.name + ": " + str(var_id.valor)
+			if var_id.name == nosis_configuracion_id.nosis_variable_5:
+				variable_5 = var_id.name + ": " + str(var_id.valor)
+		self.write({
+			'nosis_variable_1': variable_1,
+			'nosis_variable_2': variable_2,
+			'nosis_variable_3': variable_3,
+			'nosis_variable_4': variable_4,
+			'nosis_variable_5': variable_5,
+		})
 
 	@api.one
 	def set_provincia(self, provincia):

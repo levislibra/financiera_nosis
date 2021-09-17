@@ -23,6 +23,12 @@ class FinancieraNosisConfiguracion(models.Model):
 	vr = fields.Integer('Grupo de variables')
 	nro_grupo_vid = fields.Integer('Grupo VID')
 	nro_grupo_vid2 = fields.Integer('Grupo VID 2do intento')
+	nosis_variable_1 = fields.Char('Variable 1')
+	nosis_variable_2 = fields.Char('Variable 2')
+	nosis_variable_3 = fields.Char('Variable 3')
+	nosis_variable_4 = fields.Char('Variable 4')
+	nosis_variable_5 = fields.Char('Variable 5')
+	
 	asignar_nombre_cliente = fields.Boolean('Asignar Nombre al cliente')
 	asignar_nombre_cliente_variable = fields.Char('Variable para el Nombre', default='VI_RazonSocial')
 	

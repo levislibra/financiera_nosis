@@ -48,30 +48,47 @@
       <field name="arch" type="xml">
         <xpath expr="//group[@name='risk']" position="inside">
           <group string="Nosis" col="1" style="background-color: #E6E6E6">
-						<field name="nosis_variable_ids">
+						<field name="nosis_variable_ids" readonly="1">
 							<tree limit="10">
+								<field name="name"/>
 								<field name="descripcion"/>
 								<field name="valor"/>
 							</tree>
 						</field>
 						<group col="2">
 							<group col="1">
-								<field name="nosis_capacidad_pago_mensual" readonly="1"/>
+								<group string="Funciones" col="1">
+									<button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
+									<button name="ejecutar_cdas_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
+									<button name="button_obtener_cuestionario_nosis" string="Obtener cuestionario" type="object" confirm="Desea obtener el cuestionario?" groups="financiera_nosis.solicitar_informe"/>
+									<field name='nosis_cuestionario_id'/>
+								</group>
+								<group string="Otorgamiento" col="1" style="background-color: lightsteelblue;">
+									<field name="nosis_capacidad_pago_mensual" readonly="1"/>
+									<field name="nosis_partner_tipo_id" readonly="1"/>
+								</group>
 							</group>
-							<group col="1">
-								<field name="nosis_partner_tipo_id" readonly="1"/>
-							</group>
+							<group string="Valores Principales" col="1">
+								<group col="1">
+									<button string="Actualizar valores" name="asignar_variables" type="object" class="oe_highlight"/>
+								</group>
+								<group col="1">
+									<div><field name="nosis_variable_1" readonly="1"/></div>
+								</group>
+								<group col="1">
+									<div><field name="nosis_variable_2" readonly="1"/></div>
+								</group>
+								<group col="1">
+									<div><field name="nosis_variable_3" readonly="1"/></div>
+								</group>
+								<group col="1">
+									<div><field name="nosis_variable_4" readonly="1"/></div>
+								</group>
+								<group col="1">
+									<div><field name="nosis_variable_5" readonly="1"/></div>
+								</group>
+							</group>								
 						</group>
-            <separate col="1"/>
-            <group col="2">
-              <button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
-							<button name="ejecutar_cdas_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
-            </group>
-						<separate col="1"/>
-						<group col="1">
-              <button name="button_obtener_cuestionario_nosis" string="Obtener cuestionario" type="object" confirm="Desea obtener el cuestionario?" groups="financiera_nosis.solicitar_informe"/>
-							<field name='nosis_cuestionario_id'/>
-            </group>
           </group>
         </xpath>
       </field>
