@@ -9,6 +9,7 @@ ENDPOINT_NOSIS_VID = 'https://ws02.nosis.com/rest/evaluacion'
 class FinancieraNosisCuestionario(models.Model):
 	_name = 'financiera.nosis.cuestionario'
 	
+	_order = 'id desc'
 	name = fields.Char('Nombre')
 	partner_id = fields.Many2one('res.partner', 'Cliente')
 	id_consulta = fields.Char('ID consulta')

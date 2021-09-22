@@ -10,7 +10,7 @@
 				<tree>
 					<field name="create_date" string="Fecha"/>
 					<field name="partner_id"/>
-					<field name="name"/>
+					<field name="id_consulta"/>
 					<field name="pregunta_ids" options="{'reload_on_button': true}"/>
 					<field name="porcentaje"/>
 					<field name="state"/>
@@ -46,6 +46,21 @@
 				</form>
 			</field>
 		</record>
+
+		<record model="ir.actions.act_window" id="nosis_cuestionario_action">
+      <field name="name">Vid</field>
+      <field name="res_model">financiera.nosis.cuestionario</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="nosis_cuestionario_tree"/>
+    </record>
+
+		<menuitem name="Nosis Vid" id="menu_nosis_vid" sequence="18" parent="menu_nosis"/>
+    <menuitem name="Vid" id="menu_nosis_vid_action" sequence="1" parent="menu_nosis_vid" action="nosis_cuestionario_action"/>
+
+		<!-- En Onboarding -->
+		<menuitem name="Nosis Vid" id="menu_nosis_vid_onboarding" sequence="18" parent="financiera_app.menu_app_onboarding" groups="financiera_nosis.user"/>
+    <menuitem name="Vid" id="menu_nosis_vid_action_onboarding" sequence="1" parent="menu_nosis_vid_onboarding" action="nosis_cuestionario_action"/>
+
 
 		<!-- Pregunta -->
 
@@ -84,7 +99,6 @@
       <field name="view_mode">tree,form</field>
       <field name="view_id" ref="nosis_cuestionario_pregunta_tree"/>
     </record>
-
 
 		<!-- Opciones -->
 
