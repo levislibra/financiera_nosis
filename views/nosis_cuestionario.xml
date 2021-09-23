@@ -14,9 +14,32 @@
 					<field name="pregunta_ids" options="{'reload_on_button': true}"/>
 					<field name="porcentaje"/>
 					<field name="state"/>
+					<field name="company_id" groups="base.group_erp_manager"/>
 				</tree>
 			</field>
 		</record>
+
+		<!-- Filter VID Cuestionario -->
+
+		<record model="ir.ui.view" id="nosis_cuestionario_filter">
+      <field name="name">financiera.nosis.cuestionario.filter</field>
+      <field name="model">financiera.nosis.cuestionario</field>
+      <field name="arch" type="xml">
+        <search>
+					<filter string="Hoy" name="hoy" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+					<filter string="Ayer" name="ayer" domain="[('create_date','&gt;=', datetime.datetime.combine(context_today() - datetime.timedelta(days=1), datetime.time(0,0,0))), ('create_date','&lt;=', datetime.datetime.combine(context_today()- datetime.timedelta(days=1), datetime.time(23,59,59)))]"/>
+					<filter string="Ultimos 7 dias" name="last_7_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 15 dias" name="last_15_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=15)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 30 dias" name="last_30_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d') )]"/>
+					<filter string="Ultimos 60 dias" name="last_60_days"  domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=60)).strftime('%%Y-%%m-%%d') )]"/>
+					<separator/>
+          <field name="partner_id"/>
+					<separator/>
+					<filter name="group_company_id" string="Empresa" context="{'group_by':'company_id'}" groups="base.group_erp_manager"/>
+					<filter name="group_state" string="Estado" context="{'group_by':'state'}"/>
+        </search>
+      </field>
+    </record>
 
 
 		<record id="nosis_cuestionario_form"  model="ir.ui.view">
@@ -27,7 +50,6 @@
 					<header>
 						<button string="Siguiente pregunta" name="button_wizard_siguiente_pregunta" states='pendiente' type="object" class="oe_highlight"/>
 						<button string="Evaluar" name="button_evaluar_cuestionario_nosis" states='pendiente' type="object" class="oe_highlight"/>
-						<!-- <button string="Test Print dict" name="button_get_cuestionario_to_dict" type="object" class="oe_highlight"/> -->
 						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
@@ -35,7 +57,6 @@
 							<field name="create_date" string="Fecha"/>
 							<field name="partner_id" readonly="1"/>
 							<field name="name" readonly="1"/>
-							<!-- <field name="respuestas_test"/> -->
 							<field name="id_consulta" invisible="1"/>
 							<field name="pregunta_ids" options="{'reload_on_button': true}" states='aprobado,rechazado' readonly="1"/>
 							<field name="cuestionario"/>
@@ -48,18 +69,19 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="nosis_cuestionario_action">
-      <field name="name">Vid</field>
+      <field name="name">Nosis VID (Cuestionario)</field>
       <field name="res_model">financiera.nosis.cuestionario</field>
       <field name="view_mode">tree,form</field>
       <field name="view_id" ref="nosis_cuestionario_tree"/>
+			<field name="view_id" ref="nosis_cuestionario_filter"/>
     </record>
 
 		<menuitem name="Nosis Vid" id="menu_nosis_vid" sequence="18" parent="menu_nosis"/>
     <menuitem name="Vid" id="menu_nosis_vid_action" sequence="1" parent="menu_nosis_vid" action="nosis_cuestionario_action"/>
 
 		<!-- En Onboarding -->
-		<menuitem name="Nosis Vid" id="menu_nosis_vid_onboarding" sequence="18" parent="financiera_app.menu_app_onboarding" groups="financiera_nosis.user"/>
-    <menuitem name="Vid" id="menu_nosis_vid_action_onboarding" sequence="1" parent="menu_nosis_vid_onboarding" action="nosis_cuestionario_action"/>
+		<menuitem name="VID" id="menu_nosis_vid_onboarding" sequence="18" parent="financiera_app.menu_app_onboarding" groups="financiera_nosis.user"/>
+    <menuitem name="Nosis VID (Cuestionario)" id="menu_nosis_vid_action_onboarding" sequence="1" parent="menu_nosis_vid_onboarding" action="nosis_cuestionario_action"/>
 
 
 		<!-- Pregunta -->
