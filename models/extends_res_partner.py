@@ -224,4 +224,7 @@ class ExtendsResPartnerNosis(models.Model):
 	def button_obtener_cuestionario_nosis(self):
 		self.obtener_cuestionario_nosis()
 
-
+	@api.multi
+	def nosis_report(self):
+		self.ensure_one()
+		return self.env['report'].get_action(self, 'financiera_nosis.nosis_report_view')

@@ -60,6 +60,7 @@
 								<group string="Funciones" col="1">
 									<button name="button_solicitar_informe_nosis" string="Solicitar informe" type="object" confirm="Desea solicitar el informe?" groups="financiera_nosis.solicitar_informe"/>
 									<button name="ejecutar_cdas_nosis" string="Ejecutar CDAs" type="object" confirm="Desea ejecutar el CDA?"/>
+									<button name="nosis_report" string="Imprimir informe Nosis" type="object"/>
 									<button name="button_obtener_cuestionario_nosis" string="Obtener cuestionario" type="object" confirm="Desea obtener el cuestionario?" groups="financiera_nosis.solicitar_informe"/>
 									<field name='nosis_cuestionario_id'/>
 								</group>
