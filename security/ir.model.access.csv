@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 manager_financiera_nosis_configuracion,financiera.nosis.configuracion,model_financiera_nosis_configuracion,financiera_nosis.manager,1,1,1,1
-user_financiera_nosis_configuracion,financiera.nosis.configuracion,model_financiera_nosis_configuracion,financiera_nosis.user,1,0,0,0
+user_financiera_nosis_configuracion,financiera.nosis.configuracion,model_financiera_nosis_configuracion,financiera_nosis.user,1,1,0,0
 
 manager_financiera_nosis_cda,financiera.nosis.cda,model_financiera_nosis_cda,financiera_nosis.manager,1,1,1,1
 user_financiera_nosis_cda,financiera.nosis.cda,model_financiera_nosis_cda,financiera_nosis.user,1,0,0,0
