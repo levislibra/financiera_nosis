@@ -6,11 +6,12 @@
 	<report 
 		id="nosis_report"
 		model="res.partner"
-		string="Reporte Nosis"
+		string="Legajo - Informe Nosis"
 		report_type="qweb-pdf"
 		name="financiera_nosis.nosis_report_view"
 		file="financiera_nosis.nosis_report_view"
 	/>
+	
 	<record id="financiera_nosis.nosis_report" model="ir.actions.report.xml">
 		<field name="attachment_use" eval="False"/>
 	</record>
@@ -41,9 +42,8 @@
 			</div>
 			<div class="page" style="font-size:16px;">
 				<div align="center" style="font-size:16px;">
-					<b>Informe Nosis</b>
+					<h3>Informe Nosis</h3>
 				</div>
-
 				<table style="width:100%;" class="table table-hover table-striped">
 					<caption>DATOS DE EXISTENCIA CÍVICA Y JURÍDICA</caption>
 					<t t-foreach="o.nosis_variable_ids" t-as="v">

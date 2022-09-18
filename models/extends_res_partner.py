@@ -10,29 +10,8 @@ class ExtendsResPartnerNosis(models.Model):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
 
-	# Deprecated
-	nosis_vi_identificacion = fields.Char('Nosis - Identificacion')
-	nosis_vi_razonSocial = fields.Char('Nosis - Razon Social')
-	nosis_sco_vig = fields.Char('Nosis - Scoring de Riesgo')
-	nosis_sco_12m = fields.Char('Nosis - Scoring de Riesgo 12m')
-	nosis_cda = fields.Char('Nosis - Criterio de Aceptacion')
-	nosis_cda_evaluar = fields.Integer('Nosis - Nro de CDA a evaluar')
-	nosis_ci_vig_peorSit = fields.Integer('Nosis - Peor Situacion Bancaria')
-	nosis_ci_vig_total_cantBcos = fields.Integer('Nosis - Cant. de bancos y ent. fin. vigentes')
-	nosis_ci_vig_total_monto = fields.Integer('Nosis - Monto en bancos y ent. fin. vigentes')
-	nosis_ci_vig_sit1_monto = fields.Integer('Monto en sit. 1')
-	nosis_ci_vig_sit2_monto = fields.Integer('Monto en sit. 2')
-	nosis_ci_vig_sit3_monto = fields.Integer('Monto en sit. 3')
-	nosis_ci_vig_sit4_monto = fields.Integer('Monto en sit. 4')
-	nosis_ci_vig_sit5_monto = fields.Integer('Monto en sit. 5')
-	nosis_ci_vig_sit6_monto = fields.Integer('Monto en sit. 6')
-	nosis_ci_12m_sf_noPag_cant = fields.Char('Nosis - Cantidad Cheques sin fondo no pagados')
-	nosis_ci_12m_sf_noPag_monto = fields.Char('Nosis - Monto Cheques sin fondo no pagados')
-	nosis_cda_detalle = fields.Text('Nosis - CDA Detalle')
-	nosis_cda_evaluado = fields.Integer('Nosis - CDA evaluado')
-	# fin deprecated
-
 	# Nueva integracion NOSIS
+	nosis_contratado = fields.Boolean('Nosis contratado', compute='_compute_nosis_contrtado')
 	nosis_informe_ids = fields.One2many('financiera.nosis.informe', 'partner_id', 'Nosis - Informes')
 	nosis_variable_ids = fields.One2many('financiera.nosis.informe.variable', 'partner_id', 'Variables')
 	nosis_variable_1 = fields.Char('Variable 1')
@@ -45,6 +24,10 @@ class ExtendsResPartnerNosis(models.Model):
 	# Validacion por cuestionario
 	nosis_cuestionario_ids = fields.One2many('financiera.nosis.cuestionario', 'partner_id', 'Nosis - Cuestionarios')
 	nosis_cuestionario_id = fields.Many2one('financiera.nosis.cuestionario', 'Nosis - Cuestionario actual')
+
+	@api.one
+	def _compute_nosis_contrtado(self):
+		self.nosis_contratado = True if self.company_id.nosis_configuracion_id else False
 
 	@api.one
 	def solicitar_informe_nosis(self):

@@ -11,9 +11,6 @@ user_financiera_nosis_cda_resultado,financiera.nosis.cda.resultado,model_financi
 manager_financiera_nosis_cda_regla,financiera.nosis.cda.regla,model_financiera_nosis_cda_regla,financiera_nosis.manager,1,1,1,1
 user_financiera_nosis_cda_regla,financiera.nosis.cda.regla,model_financiera_nosis_cda_regla,financiera_nosis.user,1,1,1,0
 
-manager_financiera_nosis_score,financiera.nosis.score,model_financiera_nosis_score,financiera_nosis.manager,1,1,1,1
-user_financiera_nosis_score,financiera.nosis.score,model_financiera_nosis_score,financiera_nosis.user,1,0,0,0
-
 manager_financiera_nosis_informe,financiera.nosis.informe,model_financiera_nosis_informe,financiera_nosis.manager,1,1,1,0
 user_financiera_nosis_informe,financiera.nosis.informe,model_financiera_nosis_informe,financiera_nosis.user,1,1,1,0
 
