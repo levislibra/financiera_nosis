@@ -101,7 +101,7 @@ class ExtendsResPartnerNosis(models.Model):
 						elif variable_valor == 'F':
 							self.sexo = 'femenino'
 			nuevo_informe_id.write({'variable_ids': list_values})
-			self.asignar_variables()
+			self.asignar_variables_nosis()
 			if nosis_configuracion_id.asignar_direccion_cliente:
 				if len(direccion) > 0:
 					self.street = ' '.join(direccion)
@@ -110,7 +110,7 @@ class ExtendsResPartnerNosis(models.Model):
 				nuevo_informe_id.ejecutar_cdas()
 
 	@api.one
-	def asignar_variables(self):
+	def asignar_variables_nosis(self):
 		variable_1 = False
 		variable_2 = False
 		variable_3 = False

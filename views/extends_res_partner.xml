@@ -8,12 +8,11 @@
 			<field name="model">res.partner</field>
 			<field name="inherit_id" ref="financiera_prestamos.partner_form_inherited" />
 			<field name="arch" type="xml">
-				<xpath expr="//notebook[@name='risk']" position="inside">
-					<page string="Nosis" style="background-color: #E6E6E6">
-						<!-- <field name='nosis_contratado' invisible="1"/>
-						<group col="1" attrs="{'invisible': [('nosis_contratado', '=', True)]}">
-							<label string="Servicio de informes no contratado." />
-						</group> -->
+				<xpath expr="//group[@name='risk_contratado']" position="inside">
+					<field name='nosis_contratado' invisible="0"/>
+				</xpath>
+				<xpath expr="//notebook[@name='risk']" position="inside">					
+					<page string="Nosis" attrs="{'invisible': [('nosis_contratado', '=', False)]}">
 						<group col="1">
 							<group col="3">
 								<group string="Funciones" col="1">
