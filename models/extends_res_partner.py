@@ -11,7 +11,7 @@ class ExtendsResPartnerNosis(models.Model):
 	_inherit = 'res.partner'
 
 	# Nueva integracion NOSIS
-	nosis_contratado = fields.Boolean('Nosis contratado', compute='_compute_nosis_contrtado')
+	nosis_contratado = fields.Boolean('Nosis', compute='_compute_nosis_contrtado')
 	nosis_informe_ids = fields.One2many('financiera.nosis.informe', 'partner_id', 'Nosis - Informes')
 	nosis_variable_ids = fields.One2many('financiera.nosis.informe.variable', 'partner_id', 'Variables')
 	nosis_variable_1 = fields.Char('Variable 1')
